@@ -121,6 +121,7 @@ margin:15px auto;
 line-height:1.7;
 text-transform: none;
 text-decoration: none;
+color: black;
 }
 
 /* BRANDS */
@@ -214,6 +215,7 @@ color: #183153;
 .brand-text p{
 margin-bottom:15px;
 line-height:1.6;
+color: black;
 }
 /* MODELES */
 
