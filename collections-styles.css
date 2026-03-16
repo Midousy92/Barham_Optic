@@ -83,16 +83,22 @@ background-attachment:fixed;
 
 }
 
-.hero-garanties{
-background-image:url('images/De-weg-naar-behandeling-32-1024x.png');
-}
+/* .hero-garanties{
+background:url('images/produit-home.png')  no-repeat center / cover;
+height:575px;
+width: 100%;;
+} */
 
  .hero-collections{
-background-image:url('images/home-collections.png');
+background:url('images/home-collections.png')  no-repeat center / cover;
+height:575px;
+width: 100%;
 } 
 
 .hero-verres{
-background-image:url('images/verres-fond.png');
+background:url('images/verres-fond.png')  no-repeat center / cover;
+height:575px;
+width: 100%;
 }
 
 /* INTRO */

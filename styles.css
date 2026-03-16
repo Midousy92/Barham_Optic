@@ -75,7 +75,7 @@ font-size:15px;
 /* hero */
 .hero {
     background:url('images/Lunettes-de-soleil-Levis.png') center/cover no-repeat;
-    background-attachment: fixed;
+    /* background-attachment: fixed; */
     height: 500px;
     display: flex;
     align-items: center;
@@ -83,6 +83,7 @@ font-size:15px;
     color: white;
     /* margin-bottom: 80px; */
     margin-top: 60px;
+    width: 100%;
 }
 
 .hero h1 {
