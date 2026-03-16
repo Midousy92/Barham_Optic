@@ -1,0 +1,400 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+text-decoration:none;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#fff;
+color:#333;
+}
+
+img{
+width:100%;
+display:block;
+}
+
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#183153;
+padding:20px 40px;
+position:fixed;
+top:0;
+width:100%;
+z-index:1000;
+}
+
+
+#menu-bar{
+    color: #fff;
+    font-size: 30px;
+    display: none;
+}
+
+
+
+
+.logo {
+  display:flex;
+align-items:center;
+gap:10px;
+color:white;
+font-size:24px;
+font-weight:600;
+    
+}
+
+.logo img{
+width:60px;
+height:auto;
+}
+
+.navigation{
+display:flex;
+gap:20px;
+}
+
+.navigation li{
+list-style:none;
+text-transform: capitalize;
+}
+
+.navigation a{
+color:white;
+font-size:15px;
+}
+
+/* HERO */
+
+.hero{
+height:500px;
+margin-top:80px;
+background-position:center;
+background-size:cover;
+background-repeat:no-repeat;
+background-attachment:fixed;
+/* margin-top: 86px; */
+
+}
+
+.hero-garanties{
+background-image:url('../images/De-weg-naar-behandeling-32-1024x.png');
+}
+
+ .hero-collections{
+background-image:url('../images/home-collections.png');
+} 
+
+.hero-verres{
+background-image:url('../images/verres-fond.png');
+}
+
+/* INTRO */
+
+.collections-intro{
+background:#a5bfe257;
+text-align:center;
+padding:80px 20px;
+}
+
+.collections-intro h1{
+font-size:40px;
+margin-bottom:30px;
+color: #183153;
+}
+
+.collections-intro p{
+max-width:900px;
+margin:15px auto;
+line-height:1.7;
+text-transform: none;
+text-decoration: none;
+}
+
+/* BRANDS */
+.marque-titre {
+    display: flex;
+    justify-content: center;
+    display: grid;
+    
+
+}
+
+.marque-titre h1 {
+    font-size: 40px;
+    text-transform: uppercase;
+    padding: 50px;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    color: #183153;
+    width: 100%;
+    
+    
+}
+
+
+.brands-section{
+padding:80px 40px;
+}
+
+.brands-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:30px;
+max-width:1200px;
+margin:auto;
+}
+
+.brand-box{
+background:white;
+border:1px solid #ddd;
+border-radius:15px;
+height:140px;
+display:flex;
+justify-content:center;
+align-items:center;
+transition:0.3s;
+}
+
+.brand-box img{
+max-width:120px;
+opacity:.8;
+}
+
+.brand-box:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+/* FEATURED BRANDS */
+.featured-brands{
+padding:100px 60px;
+    background:#a5bfe257;
+
+}
+
+.brand-feature{
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+gap:60px;
+}
+
+.brand-feature.reverse{
+direction:rtl;
+}
+
+.brand-feature.reverse .brand-text{
+direction:ltr;
+}
+
+.brand-image img{
+width:100%;
+border-radius:10px;
+}
+
+.brand-text h3{
+font-size:28px;
+margin-bottom:20px;
+color: #183153;
+}
+
+.brand-text p{
+margin-bottom:15px;
+line-height:1.6;
+}
+/* MODELES */
+
+.modeles-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+max-width:1200px;
+margin:80px auto;
+}
+
+/* FOOTER */
+
+.footer{
+background:#183153;
+color:white;
+text-align:center;
+padding:40px 20px;
+}
+
+.footer-menu{
+margin-bottom:30px;
+}
+
+.footer-menu a{
+color:white;
+margin:0 10px;
+font-weight:bold;
+}
+
+.marques{
+max-width:900px;
+margin:auto;
+line-height:1.8;
+}
+
+
+
+@media screen and (max-width:900px) {
+    nav{
+        padding: 10px 3%;
+        /* position: relative; */
+    }
+    #menu-bar{
+        display: block;
+    }
+    .navigation{ 
+        display: none;
+        flex-direction: column;
+        background-color: rgba(6, 22, 73, 0.884);
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        text-align: center;
+        padding: 15px 0;
+    }
+    .navigation.active{
+        display: flex;
+    }
+    .navigation a{
+        display: inline-block;
+        color:#fff;
+        font-size: 1.3rem;
+        padding: 10px 15px;
+        width: 100%;
+    }
+    
+}
+
+
+
+
+/* responsive phone */
+/* TABLETTE */
+
+@media (max-width:1024px){
+
+nav{
+padding:18px 30px;
+}
+
+.navigation{
+gap:15px;
+font-size:15px;
+}
+
+.hero{
+height:400px;
+}
+
+.collections-intro h1{
+font-size:34px;
+}
+
+.brand-feature{
+grid-template-columns:1fr 1fr;
+gap:40px;
+}
+
+.featured-brands{
+padding:70px 40px;
+}
+
+.brands-container{
+grid-template-columns:repeat(3,1fr);
+}
+
+}
+
+
+
+
+@media screen and (max-width:900px) {
+    nav{
+        padding: 10px 3%;
+        /* position: relative; */
+    }
+    #menu-bar{
+        display: block;
+    }
+    .navigation{ 
+        display: none;
+        flex-direction: column;
+        background-color: rgba(6, 22, 73, 0.884);
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        text-align: center;
+        /* padding: 15px 0; */
+    }
+    .navigation.active{
+        display: flex;
+    }
+    .navigation a{
+        display: inline-block;
+        color:#fff;
+        font-size: 1.3rem;
+        padding: 5px 15px;
+        width: 100%;
+    }
+    
+}
+
+
+
+
+
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+nav{
+padding:15px 20px;
+}
+
+.navigation{
+gap:10px;
+font-size:14px;
+
+}
+
+.hero{
+height:300px;
+}
+
+.collections-intro h1{
+font-size:28px;
+}
+
+.brand-feature{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.featured-brands{
+padding:60px 20px;
+}
+
+.brands-container{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+
+
+
