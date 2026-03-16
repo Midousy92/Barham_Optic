@@ -178,9 +178,10 @@ font-size:15px;
     
 }
 
+
 /* 
 From Uiverse.io by abrahamcalsin */ 
-.about-content button {
+.about-content a {
   position: relative;
   display: flex;
   justify-content: center;
@@ -192,9 +193,11 @@ From Uiverse.io by abrahamcalsin */
   overflow: hidden;
   cursor: pointer;
   border: none;
+  /* padding: 20px; */
+  width: 50%;
 }
 
-.about-content button:after {
+.about-content a:after {
   content: " ";
   width: 0%;
   height: 100%;
@@ -204,13 +207,13 @@ From Uiverse.io by abrahamcalsin */
   right: 0;
 }
 
-.about-content button:hover::after {
+.about-content a:hover::after {
   right: auto;
   left: 0;
   width: 100%;
 }
 
-.about-content button span {
+.about-content a span {
   text-align: center;
   text-decoration: none;
   width: 100%;
@@ -223,7 +226,7 @@ From Uiverse.io by abrahamcalsin */
   transition: all 0.3s ease-in-out;
 }
 
-.about-content button:hover span {
+.about-content a:hover span {
   color: #183153;
   animation: scaleUp 0.3s ease-in-out;
 }
@@ -877,6 +880,10 @@ padding:60px 20px;
 
 .brands-container{
 grid-template-columns:repeat(2,1fr);
+}
+
+.about-content a{
+    width: 100%;
 }
 
 }
