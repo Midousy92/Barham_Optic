@@ -74,7 +74,7 @@ font-size:15px;
 
 /* hero */
 .hero {
-    background:url('../images/Lunettes-de-soleil-Levis.png') center/cover no-repeat;
+    background:url('images/Lunettes-de-soleil-Levis.png') center/cover no-repeat;
     background-attachment: fixed;
     height: 500px;
     display: flex;
@@ -355,7 +355,7 @@ box-shadow:0 10px 25px rgba(0,0,0,.1);
 
 .hero2 {
     /* background: url('../images77.png') center/cover no-repeat; */
-   background: linear-gradient(rgba(0, 0, 0, 0.795), rgba(0, 0, 0, 0.795)), url(../../static/images/b4a72f4_317523-3352006.png) no-repeat center / cover;
+   background: linear-gradient(rgba(0, 0, 0, 0.795), rgba(0, 0, 0, 0.795)), url(images/b4a72f4_317523-3352006.png) no-repeat center / cover;
    background-attachment: fixed;
     height: 500px;
     display: flex;

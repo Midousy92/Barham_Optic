@@ -38,8 +38,6 @@ z-index:1000;
 }
 
 
-
-
 .logo {
   display:flex;
 align-items:center;
@@ -72,27 +70,11 @@ font-size:15px;
 
 /* HERO */
 
-.hero{
-height:500px;
-margin-top:80px;
-background-position:center;
-background-size:cover;
-background-repeat:no-repeat;
-background-attachment:fixed;
-/* margin-top: 86px; */
-
-}
-
-.hero-garanties{
-background-image:url('../images/De-weg-naar-behandeling-32-1024x.png');
-}
-
- .hero-collections{
-background-image:url('../images/home-collections.png');
-} 
-
 .hero-verres{
-background-image:url('../images/verres-fond.png');
+background:url('images/verres-fond.png') center/cover no-repeat;
+    background-attachment: fixed;
+height:575px;
+/* margin-top:80px; */
 }
 
 /* INTRO */
@@ -115,6 +97,7 @@ margin:15px auto;
 line-height:1.7;
 text-transform: none;
 text-decoration: none;
+color: black;
 }
 
 /* BRANDS */
@@ -122,19 +105,17 @@ text-decoration: none;
     display: flex;
     justify-content: center;
     display: grid;
-    
 
 }
 
 .marque-titre h1 {
-    font-size: 40px;
+    font-size: 50px;
     text-transform: uppercase;
-    padding: 50px;
+    padding: 40px;
     margin-top: 50px;
     margin-bottom: 40px;
     color: #183153;
-    width: 100%;
-    
+   
     
 }
 
@@ -208,6 +189,7 @@ color: #183153;
 .brand-text p{
 margin-bottom:15px;
 line-height:1.6;
+color: black;
 }
 /* MODELES */
 
@@ -243,42 +225,6 @@ max-width:900px;
 margin:auto;
 line-height:1.8;
 }
-
-
-
-@media screen and (max-width:900px) {
-    nav{
-        padding: 10px 3%;
-        /* position: relative; */
-    }
-    #menu-bar{
-        display: block;
-    }
-    .navigation{ 
-        display: none;
-        flex-direction: column;
-        background-color: rgba(6, 22, 73, 0.884);
-        position: absolute;
-        top: 100%;
-        right: 0;
-        left: 0;
-        text-align: center;
-        padding: 15px 0;
-    }
-    .navigation.active{
-        display: flex;
-    }
-    .navigation a{
-        display: inline-block;
-        color:#fff;
-        font-size: 1.3rem;
-        padding: 10px 15px;
-        width: 100%;
-    }
-    
-}
-
-
 
 
 /* responsive phone */
@@ -320,7 +266,6 @@ grid-template-columns:repeat(3,1fr);
 
 
 
-
 @media screen and (max-width:900px) {
     nav{
         padding: 10px 3%;
@@ -338,7 +283,7 @@ grid-template-columns:repeat(3,1fr);
         right: 0;
         left: 0;
         text-align: center;
-        /* padding: 15px 0; */
+        /* padding: 5px 0; */
     }
     .navigation.active{
         display: flex;
@@ -356,8 +301,6 @@ grid-template-columns:repeat(3,1fr);
 
 
 
-
-
 /* MOBILE */
 
 @media (max-width:768px){
@@ -369,7 +312,6 @@ padding:15px 20px;
 .navigation{
 gap:10px;
 font-size:14px;
-
 }
 
 .hero{
@@ -394,7 +336,5 @@ grid-template-columns:repeat(2,1fr);
 }
 
 }
-
-
 
 

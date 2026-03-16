@@ -3,8 +3,6 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 text-decoration:none;
-        grid-template-columns: repeat(auto-fit, minmax(250px, auto));
-
 }
 
 body{
@@ -62,8 +60,6 @@ display:flex;
 gap:20px;
 }
 
-
-
 .navigation li{
 list-style:none;
 text-transform: capitalize;
@@ -74,33 +70,74 @@ color:white;
 font-size:15px;
 }
 
-
 /* HERO */
 
 .hero{
-background:url('../images/produit-home.png')  no-repeat center / cover;
-height:575px;
-width: 100%;
-/* margin-top:70px; */
+height:500px;
+margin-top:80px;
+background-position:center;
+background-size:cover;
+background-repeat:no-repeat;
+background-attachment:fixed;
+/* margin-top: 86px; */
 
+}
+
+.hero-garanties{
+background-image:url('images/De-weg-naar-behandeling-32-1024x.png');
+}
+
+ .hero-collections{
+background-image:url('images/home-collections.png');
+} 
+
+.hero-verres{
+background-image:url('images/verres-fond.png');
 }
 
 /* INTRO */
 
 .collections-intro{
-/* background:#a5bfe257; */
-background-color: #fff;
+background:#a5bfe257;
 text-align:center;
-padding:40px 10px;
+padding:80px 20px;
 }
 
 .collections-intro h1{
-    margin:auto;
-    font-size: 50px;
-    display: flex;align-items: center;
-    justify-content: center;
-    color: #183153;
+font-size:40px;
+margin-bottom:30px;
+color: #183153;
 }
+
+.collections-intro p{
+max-width:900px;
+margin:15px auto;
+line-height:1.7;
+text-transform: none;
+text-decoration: none;
+}
+
+/* BRANDS */
+.marque-titre {
+    display: flex;
+    justify-content: center;
+    display: grid;
+    
+
+}
+
+.marque-titre h1 {
+    font-size: 40px;
+    text-transform: uppercase;
+    padding: 50px;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    color: #183153;
+    width: 100%;
+    
+    
+}
+
 
 .brands-section{
 padding:80px 40px;
@@ -112,7 +149,6 @@ grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
 gap:30px;
 max-width:1200px;
 margin:auto;
-/* margin-bottom: 200px; */
 }
 
 .brand-box{
@@ -138,7 +174,7 @@ box-shadow:0 10px 25px rgba(0,0,0,.1);
 
 /* FEATURED BRANDS */
 .featured-brands{
-    padding:100px 60px;
+padding:100px 60px;
     background:#a5bfe257;
 
 }
@@ -172,143 +208,16 @@ color: #183153;
 .brand-text p{
 margin-bottom:15px;
 line-height:1.6;
-color: black;
-}
-
-.brand-text p a{
-    color: black;
 }
 /* MODELES */
 
-/* .modeles-container{
+.modeles-container{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 gap:20px;
 max-width:1200px;
 margin:80px auto;
-} */
-
-/* SECTION PRODUITS */
-
-.products{
-padding:100px 40px;
-background:#f5f7fb;
-text-align:center;
 }
-
-.products h2{
-font-size:40px;
-margin-bottom:60px;
-color:#183153;
-}
-
-/* CONTAINER */
-
-.products-container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:30px;
-max-width:1200px;
-margin:auto;
-}
-
-/* CARTE PRODUIT */
-
-.product-card{
-background:#fff;
-border-radius:15px;
-overflow:hidden;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
-transition:0.3s;
-position:relative;
-}
-
-.product-card:hover{
-transform:translateY(-10px);
-}
-
-/* BADGE */
-
-.badge{
-position:absolute;
-top:15px;
-left:15px;
-background:#183153;
-color:#fff;
-font-size:12px;
-padding:5px 10px;
-border-radius:5px;
-}
-
-/* IMAGE */
-
-.product-image{
-padding:20px;
-}
-
-.product-image img{
-width:100%;
-transition:0.4s;
-}
-
-.product-card:hover img{
-transform:scale(1.05);
-}
-
-/* INFO PRODUIT */
-
-.product-info{
-padding:20px;
-}
-
-.product-info h3{
-font-size:20px;
-margin-bottom:5px;
-}
-
-.brand{
-font-size:14px;
-color:#777;
-margin-bottom:10px;
-}
-
-/* PRIX */
-
-.price{
-margin-bottom:15px;
-}
-
-.new-price{
-font-size:20px;
-font-weight:bold;
-color:#183153;
-}
-
-.old-price{
-font-size:14px;
-color:#999;
-text-decoration:line-through;
-margin-left:8px;
-}
-
-/* BOUTON WHATSAPP */
-
-.product-btn{
-display:inline-block;
-background:#25D366;
-color:#fff;
-padding:10px 18px;
-border-radius:6px;
-font-size:14px;
-transition:0.3s;
-}
-
-.product-btn:hover{
-background:#1ebe5d;
-}
-
-
-
 
 /* FOOTER */
 
@@ -335,6 +244,39 @@ margin:auto;
 line-height:1.8;
 }
 
+
+
+@media screen and (max-width:900px) {
+    nav{
+        padding: 10px 3%;
+        /* position: relative; */
+    }
+    #menu-bar{
+        display: block;
+    }
+    .navigation{ 
+        display: none;
+        flex-direction: column;
+        background-color: rgba(6, 22, 73, 0.884);
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        text-align: center;
+        padding: 15px 0;
+    }
+    .navigation.active{
+        display: flex;
+    }
+    .navigation a{
+        display: inline-block;
+        color:#fff;
+        font-size: 1.3rem;
+        padding: 10px 15px;
+        width: 100%;
+    }
+    
+}
 
 
 
@@ -379,7 +321,6 @@ grid-template-columns:repeat(3,1fr);
 
 
 
-
 @media screen and (max-width:900px) {
     nav{
         padding: 10px 3%;
@@ -397,7 +338,7 @@ grid-template-columns:repeat(3,1fr);
         right: 0;
         left: 0;
         text-align: center;
-        /* padding: 5px 0; */
+        /* padding: 15px 0; */
     }
     .navigation.active{
         display: flex;
@@ -414,6 +355,9 @@ grid-template-columns:repeat(3,1fr);
 
 
 
+
+
+
 /* MOBILE */
 
 @media (max-width:768px){
@@ -425,6 +369,7 @@ padding:15px 20px;
 .navigation{
 gap:10px;
 font-size:14px;
+
 }
 
 .hero{
@@ -449,4 +394,7 @@ grid-template-columns:repeat(2,1fr);
 }
 
 }
+
+
+
 
