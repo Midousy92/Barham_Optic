@@ -109,7 +109,7 @@ color: black;
 }
 
 .marque-titre h1 {
-    font-size: 50px;
+    font-size: clamp(29px,5vw,50px);
     text-transform: uppercase;
     padding: 40px;
     margin-top: 50px;

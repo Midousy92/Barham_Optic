@@ -127,7 +127,7 @@ text-decoration: none;
 }
 
 .marque-titre h1 {
-    font-size: 40px;
+    font-size: clamp(28px,5vw,50px);
     text-transform: uppercase;
     padding: 50px;
     margin-top: 50px;
@@ -392,6 +392,8 @@ padding:60px 20px;
 .brands-container{
 grid-template-columns:repeat(2,1fr);
 }
+
+
 
 }
 
