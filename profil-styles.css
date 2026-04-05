@@ -1,0 +1,298 @@
+/* c:\Users\MIDOU\Desktop\Barham-Optic-html\profil-styles.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+    color: #333;
+}
+
+/* NAVBAR (Same as main site) */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #183153;
+    padding: 20px 40px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+#menu-bar { color: #fff; font-size: 30px; display: none; }
+.logo { display: flex; align-items: center; gap: 10px; color: white; font-size: 24px; font-weight: 600; }
+.logo img { width: 60px; height: auto; }
+.navigation { display: flex; gap: 20px; }
+.navigation li { list-style: none; text-transform: capitalize; }
+.navigation a { color: white; font-size: 15px; transition: 0.3s; }
+.navigation a:hover { color: #ffd401; }
+
+
+/* PROFIL HEADER */
+.profil-header {
+    background: #183153;
+    padding: 150px 20px 60px 20px;
+    text-align: center;
+    color: white;
+}
+
+.profil-header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.profil-header p {
+    color: #a5bfe2;
+    font-size: 16px;
+}
+
+
+/* MAIN PROFIL CONTAINER */
+.profil-container {
+    max-width: 900px;
+    margin: -40px auto 100px auto;
+    background: transparent;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+
+/* SIDEBAR ACTIONS */
+.profil-sidebar {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    text-align: center;
+}
+
+.user-avatar {
+    font-size: 80px;
+    color: #183153;
+    margin-bottom: 15px;
+}
+
+.profil-sidebar h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 5px;
+    word-break: break-all;
+}
+
+.profil-sidebar p {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 30px;
+    word-break: break-all;
+}
+
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+.btn-password {
+    background: #f1f3f5;
+    color: #333;
+}
+.btn-password:hover { background: #e2e6ea; }
+
+.btn-logout {
+    background: #ffe3e3;
+    color: #e03131;
+}
+.btn-logout:hover { background: #ffc9c9; }
+
+
+/* CONTENT AREA */
+.profil-content {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.profil-content h2 {
+    font-size: 24px;
+    color: #183153;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f1f3f5;
+    padding-bottom: 15px;
+}
+
+.profil-main-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.rdv-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rdv-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+    transition: 0.3s;
+}
+
+.rdv-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.rdv-card-info h4 {
+    margin-bottom: 5px;
+    color: #183153;
+}
+
+.rdv-card-info p {
+    color: #555;
+    font-size: 14px;
+}
+
+.rdv-card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.rdv-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-attente { background: #f1c40f; color: #000; }
+.status-confirme { background: #ffd401; color: #000; }
+.status-termine { background: #95a5a6; color: #fff; }
+
+.btn-cancel-rdv {
+    background: transparent;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.btn-cancel-rdv:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fdfdfd;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #183153;
+    outline: none;
+    box-shadow: 0 0 5px rgba(24, 49, 83, 0.2);
+}
+
+.form-group input:disabled {
+    background: #f1f3f5;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.btn-save {
+    background: #ffd401;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-save:hover { background: #e6bf00; }
+
+
+/* Firebase Messages */
+.firebase-msg {
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 14px;
+}
+.firebase-msg.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.firebase-msg.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.firebase-msg.info { background-color: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+
+
+/* FOOTER */
+.footer{ background:#183153; color:white; text-align:center; padding:40px 20px;}
+.footer-menu{ margin-bottom:30px; }
+.footer-menu a{ color:white; margin:0 10px; font-weight:bold; }
+.marques{ max-width:900px; margin:auto; line-height:1.8; }
+
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    nav { padding: 10px 3%; }
+    #menu-bar { display: block; }
+    .navigation { display: none; flex-direction: column; background: rgba(6, 22, 73, 0.95); position: absolute; top: 100%; right: 0; left: 0; text-align: center; }
+    .navigation.active { display: flex; }
+    .navigation a { padding: 5px 15px; width: 100%; font-size: 1.3rem; }
+    
+    .profil-container { grid-template-columns: 1fr; margin-top: 20px; }
+    .profil-header { padding: 120px 20px 40px; }
+}

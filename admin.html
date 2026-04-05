@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | Barham Optic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" type="image/png" href="../pages/images2/favicon_32.png">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-admin">
+            <h2>Barham Optic</h2>
+            <p>Admin Panel</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" target="_blank"><i class='bx bx-home'></i> <span class="nav-text">Site public</span></a></li>
+            <li><a href="#" class="active" id="tab-produits"><i class='bx bx-package'></i> <span class="nav-text">Produits</span></a></li>
+            <li><a href="#" id="tab-rdv"><i class='bx bx-calendar'></i> <span class="nav-text">RDV</span></a></li>
+            <li><a href="#" id="logout-btn"><i class='bx bx-log-out'></i> <span class="nav-text">Déconnexion</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- SECTION PRODUITS -->
+        <div id="section-produits">
+            <header>
+                <h1>Gestion des Produits</h1>
+                <button class="btn-add" onclick="openModal()"><i class='bx bx-plus'></i> Ajouter un Produit</button>
+            </header>
+
+            <section class="products-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Marque</th>
+                            <th>Prix</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-products-table">
+                        <tr><td colspan='5'>Chargement en cours, veuillez patienter...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- SECTION RENDEZ-VOUS -->
+        <div id="section-rdv" style="display: none;">
+            <header>
+                <h1>Gestion des Rendez-vous</h1>
+            </header>
+
+            <section class="products-list"> <!-- On réutilise le style de la liste -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>Client</th>
+                            <th>Contact</th>
+                            <th>Motif</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-rdv-table">
+                        <tr><td colspan='6'>Chargement en cours, veuillez patienter...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal Ajouter / Modifier -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h2 id="modal-title">Ajouter un produit</h2>
+            <form id="product-form">
+                <!-- Champ caché pour stocker l'ID du produit lors de la modification -->
+                <input type="hidden" id="product-id">
+
+                <label for="product-name">Nom de la monture</label>
+                <input type="text" id="product-name" placeholder="Ex: Monture Élégance" required>
+
+                <label for="product-brand">Marque</label>
+                <input type="text" id="product-brand" placeholder="Ex: Cartier, RayBan..." required>
+
+                <label for="product-price">Prix (en FCFA)</label>
+                <input type="number" id="product-price" placeholder="Ex: 120" required>
+
+                <label for="product-image">Lien ou chemin de l'image</label>
+                <!-- Zone d'aperçu de l'image existante si on modifie un produit -->
+                <div id="current-image-preview"></div>
+                <input type="text" id="product-image" placeholder="Ex: images/4.png" required>
+                
+                <p id="upload-status" style="color: #007bff; display: none; font-size: 14px; margin-top: 10px;">Sauvegarde en cours...</p>
+
+                <button type="submit" class="btn-submit" id="save-btn">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Initialisation Firebase -->
+    <script type="module" src="js/firebase-init.js?v=2"></script>
+    <!-- Logique Administrateur -->
+    <script type="module" src="js/admin.js?v=2"></script>
+</body>
+</html>

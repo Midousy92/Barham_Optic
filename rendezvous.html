@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prendre Rendez-vous | Barham Optic</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="rendezvous-styles.css">
+    <!-- On réutilise le style du panier présent sur toutes les pages -->
+    <link rel="stylesheet" href="Produits.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="images/logo_lunette_40.png" alt="logo">
+            BARHAM OPTIC</a>
+
+        <ul class="navigation" id="navigation">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="verres.html">Verres</a></li>
+            <li><a href="Produits.html">Nos Produits</a></li>
+            <li><a href="rendezvous.html" style="color:#ffd401; font-weight:bold;">Prendre RDV</a></li>
+            <li><a href="connection.html">Connexion</a></li>
+        </ul>
+        
+        <i class='bx bx-menu' id="menu-bar"></i>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-rendezvous">
+        <div class="hero-content">
+            <h1>Prenez Rendez-vous</h1>
+            <p>Réservez un créneau en boutique pour un contrôle visuel, choisir une monture ou ajuster vos lunettes. Un membre de notre équipe vous sera dédié.</p>
+        </div>
+    </section>
+
+    <!-- FORMULAIRE DE RENDEZ-VOUS -->
+    <section class="rdv-section">
+        <div class="rdv-container">
+            <h2>Formulaire de Réservation</h2>
+            <div id="msg-container"></div>
+            <form id="rdv-form">
+                <div class="form-group">
+                    <label for="rdv-nom">Nom Complet <span style="color:red">*</span></label>
+                    <input type="text" id="rdv-nom" placeholder="Ex: Jean Dupont" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rdv-tel">Numéro de Téléphone <span style="color:red">*</span></label>
+                        <input type="tel" id="rdv-tel" placeholder="Ex: +221 77 000 00 00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rdv-email">Adresse Email</label>
+                        <input type="email" id="rdv-email" placeholder="Optionnel">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rdv-motif">Motif du rendez-vous <span style="color:red">*</span></label>
+                    <select id="rdv-motif" required>
+                        <option value="" disabled selected>Choisissez une option...</option>
+                        <option value="Contrôle de la vue (Optométrie)">Contrôle de la vue (Optométrie)</option>
+                        <option value="Choix de lunettes de vue / solaires">Choix de lunettes de vue / solaires</option>
+                        <option value="Entretien / Réajustement / Réparation">Entretien / Réajustement / Réparation</option>
+                        <option value="Renouvellement de verres">Renouvellement de verres</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rdv-date">Date Souhaitée <span style="color:red">*</span></label>
+                        <!-- type="date" sera restreint par JS -->
+                        <input type="date" id="rdv-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rdv-heure">Heure Souhaitée <span style="color:red">*</span></label>
+                        <select id="rdv-heure" required disabled>
+                            <option value="" disabled selected>Sélectionnez d'abord la date</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rdv-notes">Informations complémentaires</label>
+                    <textarea id="rdv-notes" rows="3" placeholder="Avez-vous des précisions à nous donner ?..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btn-submit">Confirmer le Rendez-vous</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-menu">
+            <a href="index.html">Accueil</a>
+            <a href="collections.html">Collections</a>
+            <a href="verres.html">Verres</a>
+            <a href="Produits.html">Nos Produits</a>
+            <a href="rendezvous.html">Prendre RDV</a>
+            <a href="connection.html">Connexion</a>
+        </div>
+        <p>© 2026 Barham Optic – Tous droits réservés</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-init.js"></script>
+    <script type="module" src="js/rendezvous.js"></script>
+    <script src="js/cart.js"></script> <!-- Panier Global -->
+    <script src="js/app.js"></script> <!-- Menu Burger -->
+</body>
+</html>

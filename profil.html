@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil | Barham Optic</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="profil-styles.css">
+    <!-- Style du panier (global) -->
+    <link rel="stylesheet" href="Produits.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="images/logo_lunette_40.png" alt="logo">
+            BARHAM OPTIC</a>
+
+        <ul class="navigation" id="navigation">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="verres.html">Verres</a></li>
+            <li><a href="Produits.html">Nos Produits</a></li>
+            <li><a href="rendezvous.html">Prendre RDV</a></li>
+            <li><a href="connection.html" style="color:#ffd401; font-weight:bold;">Connexion</a></li>
+        </ul>
+        
+        <i class='bx bx-menu' id="menu-bar"></i>
+    </nav>
+
+    <!-- HEADER PROFIL -->
+    <section class="profil-header">
+        <h1>Mon Espace Client</h1>
+        <p>Gérez vos informations personnelles et sécurisez votre compte.</p>
+    </section>
+
+    <!-- ZONE PRINCIPALE -->
+    <div class="profil-container" style="display: none;" id="profil-zone">
+        
+        <!-- BARRE LATERALE -->
+        <aside class="profil-sidebar">
+            <i class='bx bxs-user-circle user-avatar'></i>
+            <h3 id="display-name">Chargement...</h3>
+            <p id="display-email">Chargement...</p>
+            
+            <button class="sidebar-btn btn-password" id="reset-password-btn">
+                <i class='bx bxs-key'></i> Changer mon mot de passe
+            </button>
+            <button class="sidebar-btn btn-logout" id="logout-btn">
+                <i class='bx bx-log-out'></i> Me déconnecter
+            </button>
+        </aside>
+
+        <!-- CONTENU CENTRAL -->
+        <div class="profil-main-zone">
+            <main class="profil-content">
+                <h2>Informations Personnelles</h2>
+                <div id="profil-msg" style="display: none;"></div>
+
+                <form id="profil-form">
+                    <div class="form-group">
+                        <label>Adresse Email (Non modifiable ici)</label>
+                        <input type="email" id="input-email" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Pseudonyme complet</label>
+                        <input type="text" id="input-username" placeholder="Votre nouveau nom..." required>
+                    </div>
+
+                    <button type="submit" class="btn-save" id="btn-save">
+                        <i class='bx bx-save'></i> Enregistrer les modifications
+                    </button>
+                </form>
+            </main>
+
+            <main class="profil-content" id="historique-rdv">
+                <h2>Historique de Mes Rendez-vous</h2>
+                <div id="rdv-list" class="rdv-list-container">
+                    <p style="text-align:center; color:#777;"><i class='bx bx-loader-alt bx-spin'></i> Chargement...</p>
+                </div>
+            </main>
+        </div>
+        
+    </div>
+
+    <!-- Message si non connecté -->
+    <div id="unauth-zone" style="text-align:center; padding: 150px 20px; display: none;">
+        <i class='bx bx-lock-alt' style="font-size: 60px; color: #183153;"></i>
+        <h2 style="margin: 20px 0; color: #183153;">Accès Restreint</h2>
+        <p style="margin-bottom: 30px;">Vous devez être connecté pour accéder à votre espace personnel.</p>
+        <a href="connection.html" class="btn-save" style="text-decoration: none;">Aller à la page de Connexion</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-menu">
+            <a href="index.html">Accueil</a>
+            <a href="collections.html">Collections</a>
+            <a href="verres.html">Verres</a>
+            <a href="Produits.html">Nos Produits</a>
+            <a href="rendezvous.html">Prendre RDV</a>
+            <a href="connection.html">Connexion</a>
+        </div>
+        <p>© 2026 Barham Optic – Tous droits réservés</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-init.js"></script>
+    <script type="module" src="js/profil.js"></script>
+    <script src="js/cart.js"></script> <!-- Panier Global -->
+    <script src="js/app.js"></script> <!-- Menu Burger -->
+</body>
+</html>
