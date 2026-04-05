@@ -11,6 +11,24 @@ background:#fff;
 color:#333;
 }
 
+/* Styling for Hero Content */
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    color: white;
+    text-align: center;
+    margin: 0;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
 img{
 width:100%;
 display:block;
@@ -71,8 +89,9 @@ font-size:15px;
 /* HERO */
 
 .hero-verres{
-background:url('images/verres-fond.png')  no-repeat center / cover;
-height:575px;
+background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('images/verres-fond.png')  no-repeat center / cover;
+height:500px;
+margin-top:60px;
 width: 100%;
 /* margin-top:80px; */
 }
