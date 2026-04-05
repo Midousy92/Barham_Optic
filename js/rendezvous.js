@@ -1,7 +1,7 @@
 // c:\Users\MIDOU\Desktop\Barham-Optic-html\js\rendezvous.js
 
 import { db, auth } from "./firebase-init.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const rdvForm = document.getElementById("rdv-form");
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     // 2. Comportement dynamique des créneaux
-    dateInput.addEventListener("change", (e) => {
+    dateInput.addEventListener("change", async (e) => {
         const selectedDateStr = e.target.value;
         const selectedDate = new Date(selectedDateStr);
         const dayOfWeek = selectedDate.getDay(); // 0 = Dimanche, 1 = Lundi...
@@ -53,16 +53,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Sinon, c'est bon
         dateInput.setCustomValidity(""); // Clear custom errors
-        heureSelect.disabled = false;
-        heureSelect.innerHTML = `<option value="" disabled selected>Sélectionnez une heure...</option>`;
+        heureSelect.disabled = true; // Désactiver pendant le chargement
+        heureSelect.innerHTML = `<option value="" disabled selected>Vérification des disponibilités...</option>`;
         
-        // On peuple le select (On pourrait ajouter une vérif dispo ici plus tard)
-        horaires.forEach(heure => {
-            const opt = document.createElement("option");
-            opt.value = heure;
-            opt.textContent = heure;
-            heureSelect.appendChild(opt);
-        });
+        try {
+            // Récupérer les rendez-vous déjà pris pour cette date depuis Firebase
+            const q = query(collection(db, "rendezvous"), where("date", "==", selectedDateStr));
+            const querySnapshot = await getDocs(q);
+            
+            // Compter le nombre de rendez-vous pour chaque heure
+            const rdvCount = {};
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                // Ne compter que les rdv qui ne sont pas annulés (facultatif si vous gérez les annulations)
+                if (data.statut !== "Annulé") {
+                    rdvCount[data.heure] = (rdvCount[data.heure] || 0) + 1;
+                }
+            });
+
+            heureSelect.innerHTML = `<option value="" disabled selected>Sélectionnez une heure...</option>`;
+            heureSelect.disabled = false; // Réactiver
+            
+            // On peuple le select en vérifiant la disponibilité (max 2)
+            horaires.forEach(heure => {
+                const opt = document.createElement("option");
+                opt.value = heure;
+                
+                if (rdvCount[heure] && rdvCount[heure] >= 2) {
+                    // S'il y a déjà 2 rendez-vous ou plus, on désactive
+                    opt.textContent = `${heure} - Complet`;
+                    opt.disabled = true;
+                } else {
+                    opt.textContent = heure;
+                }
+                
+                heureSelect.appendChild(opt);
+            });
+
+        } catch (error) {
+            console.error("Erreur lors de la vérification des disponibilités :", error);
+            heureSelect.innerHTML = `<option value="" disabled selected>Erreur de réseau</option>`;
+        }
     });
 
     // 3. Soumission du Formulaire
