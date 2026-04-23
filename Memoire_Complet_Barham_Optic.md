@@ -9,7 +9,7 @@ L'entreprise **Barham Optic**, spécialisée dans la vente de lunettes et la pre
 Face à ces constats, une **problématique** centrale se dégage : *Comment Barham Optic peut-elle moderniser la gestion de son activité, optimiser l'accueil de ses patients et accroître sa visibilité commerciale grâce aux outils du développement web moderne ?*
 
 Pour répondre à ce questionnement, l'**objectif principal** de notre projet a consisté à concevoir, développer et déployer une application web complète, dynamique et responsive, dédiée à la gestion des activités de Barham Optic. De manière spécifique, le système informatique mis en place vise à accomplir plusieurs objectifs intermédiaires : 
-1. **Digitaliser le catalogue** en offrant la possibilité aux clients de consulter les différents modèles (collections, verres, montures solaires) avec des filtres multicritères avancés.
+1. **Digitaliser le catalogue** en offrant la possibilité aux clients de consulter les différents modèles (collections, verres, montures solaires) avec des filtres multicritères avancés et un ciblage précis (Homme, Femme, Enfant, Mixte).
 2. **Automatiser la prise de rendez-vous** grâce à une plateforme permettant aux clients de planifier, suivre et gérer leurs consultations ophtalmologiques, tout en respectant les limites de capacité journalière de l'opticien.
 3. **Faciliter le processus d'achat** en intégrant des technologies modernes comme l'API WhatsApp, offrant ainsi une commande rapide et un lien direct, sécurisant et rassurant entre le client et l'opticien.
 4. **Fournir un outil de gestion (Dashboard)** à l'administrateur de la boutique pour piloter le catalogue de produits, les utilisateurs et les rendez-vous de manière centralisée, avec une base de données en temps réel.
@@ -102,7 +102,7 @@ Les besoins non-fonctionnels concernent les contraintes techniques, de performan
 *   **Portabilité et Accessibilité :** Le site web doit fonctionner correctement sur les différents navigateurs modernes du marché (Chrome, Firefox, Safari, Edge) sans perte de qualité visuelle ou fonctionnelle.
 *   **Ergonomie et Charte graphique :** L’interface doit être intuitive, élégante mais professionnelle. Le choix des couleurs et des typographies doit refléter la spécialité médicale et le côté "premium" de la lunetterie.
 *   **Sécurité et Protection des Données :** L’accès au module d'administration doit être strictement restreint et crypté. Les mots de passe des utilisateurs devront être gérés de façon sécurisée (hachage complet), d'où le recours prévu à des services d'authentification prouvés plutôt qu'au développement d'une structure de sécurité depuis la base, vulnérable aux attaques de type injection SQL.
-*   **Haut Niveau de Disponibilité (Performance) :** Le service sera hébergé sur le Cloud afin d'assurer un fonctionnement ininterrompu et une vitesse de chargement minimale pour le confort du visiteur.
+*   **Haut Niveau de Disponibilité et Optimisation des Coûts (FinOps) :** Le service sera hébergé sur le Cloud afin d'assurer un fonctionnement ininterrompu. L'architecture globale devra garantir une optimisation stricte des coûts, en évitant notamment la facturation liée à l'hébergement de fichiers médias lourds (images), grâce à un traitement intelligent des données côté client.
 
 ## 1.5 Démarche méthodologique adoptée
 
@@ -277,7 +277,7 @@ classDiagram
         +String ReferenceID (PK)
         +String nomMonture
         +String marque
-        +String categorie (homme, femme, enfant)
+        +String categorie (homme, femme, enfant, mixte)
         +Double prix
         +String imageUrl
         +String quantiteStock
