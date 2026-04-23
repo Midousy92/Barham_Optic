@@ -1,9 +1,8 @@
 // c:\Users\MIDOU\Desktop\Barham-Optic-html\js\admin.js
 
-import { auth, db, storage } from "./firebase-init.js";
+import { auth, db } from "./firebase-init.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
 
 
 // L'unique adresse email autorisée à accéder au panel d'administration
@@ -304,11 +303,10 @@ form.addEventListener('submit', async (e) => {
         
         if (imageFile) {
             uploadStatus.style.display = "block";
-            uploadStatus.innerText = "Téléversement de l'image en cours...";
+            uploadStatus.innerText = "Compression et traitement de l'image...";
             
-            const fileRef = ref(storage, 'produits_images/' + Date.now() + '_' + imageFile.name);
-            await uploadBytes(fileRef, imageFile);
-            imageUrl = await getDownloadURL(fileRef);
+            // On utilise la compression locale au lieu de Firebase Storage pour que ça soit 100% gratuit
+            imageUrl = await compressImage(imageFile, 800, 0.7);
         }
 
         uploadStatus.style.display = "block";
@@ -344,3 +342,39 @@ form.addEventListener('submit', async (e) => {
         uploadStatus.style.display = "none";
     }
 });
+
+// -------------------------------------------------------------
+// UTILITAIRE : COMPRESSION D'IMAGE EN BASE64
+// -------------------------------------------------------------
+function compressImage(file, maxWidth = 800, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Récupération de l'image compressée en Base64 (format JPEG)
+                const base64Data = canvas.toDataURL('image/jpeg', quality);
+                resolve(base64Data);
+            };
+            img.onerror = (error) => reject(error);
+        };
+        reader.onerror = (error) => reject(error);
+    });
+}
