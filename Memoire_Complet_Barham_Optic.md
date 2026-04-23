@@ -149,6 +149,8 @@ Le diagramme des cas d'utilisation permet de structurer les besoins des utilisat
 
 *(Insérez ici le schéma du Cas d'Utilisation Global)*
 
+![Diagramme Cas d'Utilisation](images_uml/use_case.png)
+
 ```mermaid
 usecaseDiagram
   actor Client
@@ -201,6 +203,8 @@ Le diagramme de séquences est l'un des diagrammes comportementaux d'UML. Il per
 
 ### Diagramme de séquence du flux "Passer commande de lunettes"
 
+![Diagramme Séquence Commande](images_uml/sequence_commande.png)
+
 ```mermaid
 sequenceDiagram
     actor Client
@@ -222,6 +226,8 @@ sequenceDiagram
 *Analyse du déroulement :* Ce diagramme démontre l'efficience de l'architecture. Le serveur allège sa structure métier en déléguant la finalisation transactionnelle à l'API de messagerie cryptée WhatsApp.
 
 ### Diagramme de séquence du flux "Prise de rendez-vous sécurisée"
+
+![Diagramme Séquence Rendez-vous](images_uml/sequence_rdv.png)
 
 ```mermaid
 sequenceDiagram
@@ -258,6 +264,8 @@ L'architecture backend reposant sur *Google Firebase Firestore*, il ne s'agit pa
 Dans Firestore, les tables sont appelées **Collections**, les enregistrements sont des **Documents**, et il n'y a pas de jointures strictes. 
 
 Toutefois, modéliser notre dictionnaire de données sous forme de diagramme de classes UML métiers reste essentiel pour structurer correctement les informations dans ce format JSON-like.
+
+![Diagramme de Classes Métier](images_uml/class_diagram.png)
 
 ```mermaid
 classDiagram
