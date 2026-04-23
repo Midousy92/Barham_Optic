@@ -38,7 +38,7 @@ L'objectif général de ce projet de recherche appliquée est de numériser de b
 
 ### b. Objectifs spécifiques
 Pour matérialiser cet objectif général, le cahier des charges s'est articulé autour de quatre objectifs spécifiques :
-* **Digitaliser le catalogue :** Mettre en place une vitrine numérique publique intégrant un système algorithmique de recherche et de filtrage dynamique multicritères (par marque, prix, type) exécutable instantanément par le navigateur.
+* **Digitaliser le catalogue :** Mettre en place une vitrine numérique publique intégrant un système algorithmique de recherche et de filtrage dynamique multicritères (par marque, prix, type et ciblage : Homme, Femme, Enfant, Mixte) exécutable instantanément par le navigateur. De plus, un algorithme détecte et met en valeur automatiquement le dernier ajout avec un badge "Nouveau".
 * **Automatiser les réservations :** Concevoir un module de prise de rendez-vous en ligne asynchrone, incluant des garde-fous stricts dans la base de données (ex: blocage automatique au-delà de 2 rendez-vous par créneau horaire) pour empêcher le surbooking.
 * **Optimiser le tunnel d'achat :** Faciliter le parcours client en développant une intégration directe avec l'API Web WhatsApp. Ainsi, la validation du panier génère un lien de discussion pré-rempli, transformant le site web en un outil de *Social Commerce* efficace.
 * **Concevoir une Administration Autonome :** Développer un tableau de bord (Dashboard) sécurisé à l'architecture CRUD (Create, Read, Update, Delete) permettant à l'administrateur de gérer son catalogue et de suivre les consultations sans nécessiter de compétences avancées en programmation.

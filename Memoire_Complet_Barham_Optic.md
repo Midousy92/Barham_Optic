@@ -80,7 +80,7 @@ Le cahier des charges représente la pierre angulaire de notre projet. Il s'agit
 Les besoins fonctionnels décrivent avec précision ce que le système (l'application web) doit être capable de faire. Les actions recensées sont les suivantes :
 
 1.  **Gestion et Affichage du catalogue public :**
-    *   Le système doit afficher la liste des lunettes disponibles réparties par catégories (Collections, Verres).
+    *   Le système doit afficher la liste des lunettes disponibles réparties par type et par cible (Homme, Femme, Enfant, Mixte).
     *   Les clients doivent pouvoir filtrer les produits, rechercher par nom ou par marque et visualiser le détail de chaque article.
 2.  **Panier et Commande (Intégration WhatsApp) :**
     *   Le client doit pouvoir sélectionner un produit et déclencher un processus de commande.
@@ -191,8 +191,8 @@ Afin de ne laisser aucune place à l'ambiguïté, chaque cas d'utilisation majeu
 *   **Description du déroulement :**
     1. L'administrateur accède au panel d'administration (admin.html).
     2. Il sélectionne la fonction "Ajouter un produit".
-    3. Il saisit les caractéristiques du nouveau modèle de lunettes (Nom, Marque, Categorie, Image, Prix).
-    4. À la soumission, le système enregistre l'URL ou le chemin direct de l'image, couplé aux données textuelles sur *Firestore*.
+    3. Il saisit les caractéristiques du nouveau modèle de lunettes (Nom, Marque, Cible/Catégorie, Prix) et téléverse une image depuis son appareil.
+    4. À la soumission, le système compresse l'image en direct (conversion Base64) et enregistre ce code couplé aux données textuelles sur *Firestore*.
     5. Le catalogue front-end est instantanément rafraîchi pour tous les visiteurs.
 
 ## 2.4 Modélisation de la dynamique : Les Diagrammes de Séquences
@@ -380,7 +380,7 @@ Ce chapitre constitue le cœur technique de notre travail de recherche et de dé
 L'aspect visuel de l'application a été pensé pour refléter le professionnalisme clinique d'un opticien, tout en adoptant les codes graphiques du commerce digital haut de gamme (minimalisme, clarté, aération du contenu). 
 
 ### 4.1.1 La page d'Accueil (index.html)
-La page d'accueil est le point d'entrée principal. Elle se décompose en un "Hero Section" imposant, captant l'attention de l'utilisateur dès les premières secondes grâce à une image d'arrière-plan haute définition et un appel à l'action (Call-to-Action) clair l'invitant à découvrir nos collections. La structure de navigation (header) est épurée, et les titres sont scrupuleusement centrés pour assurer un équilibre visuel parfait.
+La page d'accueil est le point d'entrée principal. Elle se décompose en un "Hero Section" imposant, captant l'attention de l'utilisateur dès les premières secondes grâce à une image d'arrière-plan haute définition et un appel à l'action (Call-to-Action) clair l'invitant à découvrir nos collections. La structure de navigation (header) est épurée, et les titres sont scrupuleusement centrés pour assurer un équilibre visuel parfait. De plus, une logique JavaScript dynamique a été implémentée pour détecter automatiquement le dernier produit ajouté dans la base de données et lui apposer un badge "Nouveau" en vitrine, gardant ainsi la page d'accueil toujours vivante et attractive sans intervention manuelle.
 
 > *(Conseil : Insérer ici une capture d'écran globale de la page d'accueil avec son menu de navigation)*
 **Figure 4.1 : Page d'accueil présentant le Hero Section et la navigation primaire.**
