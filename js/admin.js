@@ -4,6 +4,7 @@ import { auth, db } from "./firebase-init.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
+
 // L'unique adresse email autorisée à accéder au panel d'administration
 const ADMIN_EMAIL = "barhamoptic70@gmail.com";
 
@@ -59,7 +60,7 @@ async function chargerProduits() {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><img src="${data.image}" alt="${data.nom}"></td>
-                <td>${data.nom}</td>
+                <td>${data.nom} <br><small style="color:gray;">${data.categorie || 'Non spécifié'}</small></td>
                 <td><span style="background:#ecf0f1; border-radius:5px; padding:3px 8px; font-size:12px;">${data.marque}</span></td>
                 <td><b>${data.prix} FCFA</b></td>
                 <td>
@@ -216,6 +217,19 @@ window.closeModal = function() {
     modal.style.display = 'none';
 }
 
+// Aperçu en direct de l'image lors de la saisie
+const imageInput = document.getElementById('product-image');
+const imagePreviewContainer = document.getElementById('current-image-preview');
+
+imageInput.addEventListener('input', function() {
+    const url = this.value.trim();
+    if (url) {
+        imagePreviewContainer.innerHTML = `<p style="font-size:12px; color:#7f8fa6;">Aperçu :</p><img src="${url}" alt="Aperçu de l'image" style="max-width: 100px; max-height: 100px; border-radius: 5px; margin-bottom: 10px;" onerror="this.onerror=null; this.src=''; this.alt='Image introuvable. Vérifiez l\'extension (.jpg, .png...) et le nom.'">`;
+    } else {
+        imagePreviewContainer.innerHTML = '';
+    }
+});
+
 // 5. Remplir le formulaire pour modification
 window.editerProduit = function(id) {
     const produit = currentProducts.find(p => p.id === id);
@@ -224,6 +238,7 @@ window.editerProduit = function(id) {
     document.getElementById('product-id').value = id;
     document.getElementById('product-name').value = produit.nom;
     document.getElementById('product-brand').value = produit.marque;
+    document.getElementById('product-category').value = produit.categorie || "";
     document.getElementById('product-price').value = parseInt(produit.prix) || produit.prix;
     document.getElementById('product-image').value = produit.image;
     
@@ -258,6 +273,7 @@ form.addEventListener('submit', async (e) => {
     const id = document.getElementById('product-id').value;
     const nom = document.getElementById('product-name').value;
     const marque = document.getElementById('product-brand').value;
+    const categorie = document.getElementById('product-category').value;
     const prix = document.getElementById('product-price').value;
     const imageUrl = document.getElementById('product-image').value;
     
@@ -272,6 +288,7 @@ form.addEventListener('submit', async (e) => {
         const produitData = {
             nom: nom,
             marque: marque,
+            categorie: categorie,
             prix: parseInt(prix), // S'assure de stocker le prix comme un nombre et non du texte
             image: imageUrl
         };
@@ -281,6 +298,7 @@ form.addEventListener('submit', async (e) => {
             await updateDoc(doc(db, "produits", id), produitData);
         } else {
             // Aucun ID : c'est un nouveau document qu'on crée
+            produitData.createdAt = Date.now();
             await addDoc(collection(db, "produits"), produitData);
         }
 

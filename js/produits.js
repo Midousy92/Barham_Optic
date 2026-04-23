@@ -61,6 +61,7 @@ async function chargerProduits() {
                     <div class="product-info">
                         <h3>${produit.nom}</h3>
                         <p class="brand">${produit.marque}</p>
+                        <p class="category" style="font-size: 12px; color: gray; margin-bottom: 5px;">${produit.categorie || 'Mixte'}</p>
                         <div class="price">
                             <span class="new-price">${produit.prix} FCFA</span>
                         </div>
@@ -89,15 +90,17 @@ chargerProduits();
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search-input");
     const priceDropdown = document.getElementById("price-dropdown");
+    const categoryDropdown = document.getElementById("category-dropdown");
     const filterContainer = document.querySelector(".filter-container");
     const productsContainer = document.querySelector(".products-container");
 
     function applyAllFilters() {
         if (!productsContainer) return;
 
-        // Récupérer les 3 valeurs actuelles des filtres
+        // Récupérer les valeurs actuelles des filtres
         const searchText = searchInput ? searchInput.value.toLowerCase().trim() : "";
         const priceValue = priceDropdown ? priceDropdown.value : "tous";
+        const categoryValue = categoryDropdown ? categoryDropdown.value.toLowerCase() : "toutes";
         
         const activeBtn = document.querySelector(".filter-btn.active");
         const activeBrand = activeBtn ? activeBtn.getAttribute("data-filter").toLowerCase() : "toutes";
@@ -138,8 +141,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
+            // 4. Filtre par Catégorie
+            let matchesCategory = true;
+            if (categoryValue !== "toutes") {
+                const categoryElement = product.querySelector(".category");
+                const catText = categoryElement ? categoryElement.textContent.toLowerCase() : "mixte";
+                if (!catText.includes(categoryValue)) {
+                    matchesCategory = false;
+                }
+            }
+
             // Application de la visibilité
-            if (matchesSearch && matchesBrand && matchesPrice) {
+            if (matchesSearch && matchesBrand && matchesPrice && matchesCategory) {
                 product.style.display = "block";
             } else {
                 product.style.display = "none";
@@ -157,6 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // b. Choix dans le menu déroulant des prix
     if (priceDropdown) {
         priceDropdown.addEventListener("change", applyAllFilters);
+    }
+
+    // Choix dans le menu déroulant de catégorie
+    if (categoryDropdown) {
+        categoryDropdown.addEventListener("change", applyAllFilters);
     }
 
     // c. Clic sur un bouton de la catégorie de marque

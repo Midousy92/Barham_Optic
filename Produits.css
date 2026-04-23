@@ -303,7 +303,8 @@ color:#183153;
     box-shadow: 0 0 5px rgba(255, 212, 1, 0.3);
 }
 
-.price-filter select {
+.price-filter select,
+.category-filter select {
     padding: 12px 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -316,7 +317,8 @@ color:#183153;
     transition: 0.3s;
 }
 
-.price-filter select:focus {
+.price-filter select:focus,
+.category-filter select:focus {
     border-color: #ffd401;
 }
 
@@ -338,11 +340,14 @@ color:#183153;
         width: 100%;
     }
     
-    .price-filter {
+    .price-filter,
+    .category-filter {
         width: 100%;
+        margin-left: 0 !important;
     }
     
-    .price-filter select {
+    .price-filter select,
+    .category-filter select {
         width: 100%;
     }
 }
