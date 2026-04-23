@@ -52,7 +52,7 @@ L’hypothèse principale de notre travail postulait que **l'implémentation d'u
 **Vérification de l'hypothèse (Résultats obtenus) :**
 La réalisation concrète du site a confirmé cette hypothèse. L'approche choisie se révèle extrêmement efficace :
 - Le Secrétariat n'a plus à consigner les appels manuellement : les requêtes de rendez-vous s'affichent automatiquement dans le Dashboard sécurisé de l'administration.
-- Le choix de ne **pas utiliser le stockage payant des médias** (Firebase Storage) mais de privilégier des chemins relatifs d'images locales synchronisés avec Firestore garantit à l'entreprise un projet hébergé à bas coût, maîtrisant le principe du *FinOps*.
+- Le choix de ne **pas utiliser le stockage payant des médias** (Firebase Storage) mais d'implémenter un algorithme de compression local en `Base64` via l'API Canvas HTML5 garantit à l'entreprise un projet hébergé à coût zéro, maîtrisant le principe du *FinOps*. Les images uploadées par l'administrateur (y compris depuis un smartphone) sont instantanément transformées en texte et stockées gratuitement dans Firestore.
 - Le recours au langage natif (Vanilla JS, sans surcouches lourdes comme React.js) permet un chargement quasi instantané, favorisant l'expérience utilisateur mobile.
 
 ---
