@@ -1,8 +1,9 @@
 // c:\Users\MIDOU\Desktop\Barham-Optic-html\js\admin.js
 
-import { auth, db } from "./firebase-init.js";
+import { auth, db, storage } from "./firebase-init.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
 
 
 // L'unique adresse email autorisée à accéder au panel d'administration
@@ -208,6 +209,7 @@ const form = document.getElementById('product-form');
 window.openModal = function() {
     form.reset();
     document.getElementById('product-id').value = "";
+    document.getElementById('existing-image-url').value = "";
     document.getElementById('modal-title').innerText = "Nouveau Produit";
     document.getElementById('current-image-preview').innerHTML = "";
     modal.style.display = 'flex';
@@ -217,16 +219,25 @@ window.closeModal = function() {
     modal.style.display = 'none';
 }
 
-// Aperçu en direct de l'image lors de la saisie
-const imageInput = document.getElementById('product-image');
+// Aperçu en direct de l'image sélectionnée
+const imageInput = document.getElementById('product-image-file');
 const imagePreviewContainer = document.getElementById('current-image-preview');
 
-imageInput.addEventListener('input', function() {
-    const url = this.value.trim();
-    if (url) {
-        imagePreviewContainer.innerHTML = `<p style="font-size:12px; color:#7f8fa6;">Aperçu :</p><img src="${url}" alt="Aperçu de l'image" style="max-width: 100px; max-height: 100px; border-radius: 5px; margin-bottom: 10px;" onerror="this.onerror=null; this.src=''; this.alt='Image introuvable. Vérifiez l\'extension (.jpg, .png...) et le nom.'">`;
+imageInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagePreviewContainer.innerHTML = `<p style="font-size:12px; color:#7f8fa6;">Nouvelle image prête à être uploadée :</p><img src="${e.target.result}" alt="Aperçu" style="max-width: 100px; max-height: 100px; border-radius: 5px; margin-bottom: 10px;">`;
+        }
+        reader.readAsDataURL(file);
     } else {
-        imagePreviewContainer.innerHTML = '';
+        const existingUrl = document.getElementById('existing-image-url').value;
+        if (existingUrl) {
+            imagePreviewContainer.innerHTML = `<p style="font-size:12px; color:#7f8fa6;">Image actuelle :</p><img src="${existingUrl}" alt="Actuelle" style="max-width: 100px; max-height: 100px; border-radius: 5px; margin-bottom: 10px;">`;
+        } else {
+            imagePreviewContainer.innerHTML = '';
+        }
     }
 });
 
@@ -240,9 +251,11 @@ window.editerProduit = function(id) {
     document.getElementById('product-brand').value = produit.marque;
     document.getElementById('product-category').value = produit.categorie || "";
     document.getElementById('product-price').value = parseInt(produit.prix) || produit.prix;
-    document.getElementById('product-image').value = produit.image;
     
-    document.getElementById('current-image-preview').innerHTML = `<p style="font-size:12px; color:#7f8fa6;">Image actuelle :</p><img src="${produit.image}" alt="Image actuelle">`;
+    document.getElementById('existing-image-url').value = produit.image;
+    document.getElementById('product-image-file').value = ""; // On vide le champ fichier
+    
+    document.getElementById('current-image-preview').innerHTML = `<p style="font-size:12px; color:#7f8fa6;">Image actuelle :</p><img src="${produit.image}" alt="Image actuelle" style="max-width: 100px; max-height: 100px; border-radius: 5px; margin-bottom: 10px;">`;
     document.getElementById('modal-title').innerText = "Modifier les informations";
 
     modal.style.display = 'flex';
@@ -275,12 +288,29 @@ form.addEventListener('submit', async (e) => {
     const marque = document.getElementById('product-brand').value;
     const categorie = document.getElementById('product-category').value;
     const prix = document.getElementById('product-price').value;
-    const imageUrl = document.getElementById('product-image').value;
+    const imageFile = document.getElementById('product-image-file').files[0];
+    const existingImageUrl = document.getElementById('existing-image-url').value;
     
+    if (!id && !imageFile) {
+        alert("Veuillez sélectionner une image pour le nouveau produit.");
+        return;
+    }
+
     // Bloque le bouton pour éviter les clics multiples
     saveBtn.disabled = true;
 
     try {
+        let imageUrl = existingImageUrl;
+        
+        if (imageFile) {
+            uploadStatus.style.display = "block";
+            uploadStatus.innerText = "Téléversement de l'image en cours...";
+            
+            const fileRef = ref(storage, 'produits_images/' + Date.now() + '_' + imageFile.name);
+            await uploadBytes(fileRef, imageFile);
+            imageUrl = await getDownloadURL(fileRef);
+        }
+
         uploadStatus.style.display = "block";
         uploadStatus.innerText = "Sauvegarde dans la base de données...";
 

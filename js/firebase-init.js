@@ -9,6 +9,9 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.11.0/firebas
 // Importation de l'Authentification Firebase
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
+// Importation de Firebase Storage pour l'upload d'images
+import { getStorage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
+
 // La configuration de ton projet Barham Optic
 const firebaseConfig = {
   apiKey: "AIzaSyBj6ZxokZR5z3a1z3OdeqKliaEbnKFs5BI",
@@ -27,6 +30,9 @@ export const db = getFirestore(app);
 
 // Initialisation de l'authentification et exportation
 export const auth = getAuth(app);
+
+// Initialisation de Firebase Storage et exportation
+export const storage = getStorage(app);
 
 // ---- GESTION DU BOUTON CONNEXION / MON PROFIL ----
 onAuthStateChanged(auth, (user) => {
