@@ -358,7 +358,7 @@ box-shadow:0 10px 25px rgba(0,0,0,.1);
 
 .hero2 {
     /* background: url('../images77.png') center/cover no-repeat; */
-   background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(images/b4a72f4_317523-3352006.png) no-repeat center / cover;
+   background: linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)), url(images/b4a72f4_317523-3352006.png) no-repeat center / cover;
    /* background-attachment: fixed; */
     height: 500px;
     display: flex;
