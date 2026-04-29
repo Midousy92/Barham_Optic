@@ -96,9 +96,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Fonction utilitaire pour éviter les failles XSS (Nettoyage des entrées)
+    function sanitizeHTML(str) {
+        if (!str) return "";
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+    }
+
     // 3. Soumission du Formulaire
     rdvForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        // --- VÉRIFICATION ANTI-SPAM (Honeypot) ---
+        const botcheck = document.getElementById('botcheck');
+        if (botcheck && botcheck.checked) {
+            // C'est un robot ! On fait semblant que ça a marché pour le tromper sans gaspiller de requêtes.
+            msgContainer.innerHTML = `<div class="firebase-msg success">✅ Votre rendez-vous a été enregistré.</div>`;
+            rdvForm.reset();
+            return;
+        }
 
         // Afficher message de chargement
         btnSubmit.disabled = true;
@@ -106,13 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
         msgContainer.innerHTML = "";
 
         const rdvData = {
-            nom: document.getElementById("rdv-nom").value,
-            telephone: document.getElementById("rdv-tel").value,
-            email: document.getElementById("rdv-email").value || "Non fourni",
-            motif: document.getElementById("rdv-motif").value,
+            nom: sanitizeHTML(document.getElementById("rdv-nom").value),
+            telephone: sanitizeHTML(document.getElementById("rdv-tel").value),
+            email: sanitizeHTML(document.getElementById("rdv-email").value) || "Non fourni",
+            motif: sanitizeHTML(document.getElementById("rdv-motif").value),
             date: dateInput.value,
             heure: heureSelect.value,
-            notes: document.getElementById("rdv-notes").value || "Pas de note",
+            notes: sanitizeHTML(document.getElementById("rdv-notes").value) || "Pas de note",
             statut: "En attente", // Statut initial de la réservation
             dateCreation: serverTimestamp(), // Enregistre la date exacte de soumission
             userId: auth.currentUser ? auth.currentUser.uid : "Non connecté" // Lie le rdv au compte si la personne est connectée

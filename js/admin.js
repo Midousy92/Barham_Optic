@@ -275,6 +275,14 @@ window.supprimerProduit = async function(id) {
     }
 }
 
+// Fonction utilitaire pour éviter les failles XSS (Nettoyage des entrées)
+function sanitizeHTML(str) {
+    if (!str) return "";
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+}
+
 // 7. Enregistrement (Création d'un nouveau, ou Mise à jour d'un existant)
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -283,9 +291,9 @@ form.addEventListener('submit', async (e) => {
     const uploadStatus = document.getElementById('upload-status');
     
     const id = document.getElementById('product-id').value;
-    const nom = document.getElementById('product-name').value;
-    const marque = document.getElementById('product-brand').value;
-    const categorie = document.getElementById('product-category').value;
+    const nom = sanitizeHTML(document.getElementById('product-name').value);
+    const marque = sanitizeHTML(document.getElementById('product-brand').value);
+    const categorie = sanitizeHTML(document.getElementById('product-category').value);
     const prix = document.getElementById('product-price').value;
     const imageFile = document.getElementById('product-image-file').files[0];
     const existingImageUrl = document.getElementById('existing-image-url').value;

@@ -89,7 +89,7 @@ font-size:15px;
 /* HERO */
 
 .hero-verres{
-background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('images/verres-fond.png')  no-repeat center / cover;
+background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('images/verres-fond.png')  no-repeat center / cover;
 height:500px;
 margin-top:60px;
 width: 100%;
