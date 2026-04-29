@@ -1,8 +1,8 @@
 // c:\Users\MIDOU\Desktop\Barham-Optic-html\js\auth.js
 
 import { auth, db } from "./firebase-init.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 // --- GESTION DE L'INSCRIPTION (Register) ---
 const registerForm = document.querySelector('.form-box.register form');
@@ -135,4 +135,52 @@ if (forgotPasswordBtn && loginForm) {
             btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: red; margin-bottom: 10px; font-weight: bold; text-align: center;">${errorMessage}</p>`);
         }
     });
+}
+
+// --- GESTION DE LA CONNEXION AVEC GOOGLE ---
+const googleLoginBtn = document.getElementById('btn-google-login');
+const googleRegisterBtn = document.getElementById('btn-google-register');
+
+async function handleGoogleLogin(e, formElement) {
+    e.preventDefault();
+    const provider = new GoogleAuthProvider();
+    try {
+        console.log("⏳ Connexion Google en cours...");
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        // Vérifier si l'utilisateur existe déjà dans Firestore
+        const userDoc = await getDoc(doc(db, "utilisateurs", user.uid));
+        
+        if (!userDoc.exists()) {
+            // S'il n'existe pas (première connexion), on lui crée un profil avec son nom Google
+            await setDoc(doc(db, "utilisateurs", user.uid), {
+                username: user.displayName || "Utilisateur Google",
+                email: user.email,
+                dateCreation: new Date()
+            });
+        }
+        
+        // Message de succès dynamique
+        const ancienMsg = formElement.querySelector('.firebase-msg');
+        if(ancienMsg) ancienMsg.remove();
+        
+        const btnSubmit = formElement.querySelector('.btn');
+        btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #ffd401; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Connexion Google réussie ! Redirection...</p>`);
+        
+        setTimeout(() => {
+            window.location.href = "index.html"; 
+        }, 1500);
+
+    } catch (error) {
+        console.error("Erreur connexion Google:", error);
+        alert("Erreur lors de la connexion avec Google. Assurez-vous que l'option est activée sur Firebase.");
+    }
+}
+
+if (googleLoginBtn && loginForm) {
+    googleLoginBtn.addEventListener('click', (e) => handleGoogleLogin(e, loginForm));
+}
+if (googleRegisterBtn && registerForm) {
+    googleRegisterBtn.addEventListener('click', (e) => handleGoogleLogin(e, registerForm));
 }
