@@ -117,18 +117,30 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // --- VALIDATION STRICTE EN JS ---
+        const inputNom = document.getElementById("rdv-nom").value.trim();
+        const inputTel = document.getElementById("rdv-tel").value.trim();
+        const inputMotif = document.getElementById("rdv-motif").value;
+        const inputDate = dateInput.value;
+        const inputHeure = heureSelect.value;
+
+        if (!inputNom || !inputTel || !inputMotif || !inputDate || !inputHeure) {
+            msgContainer.innerHTML = `<div class="firebase-msg error" style="color: red; font-weight: bold; padding: 10px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; margin-bottom: 15px;">❌ Erreur : Veuillez remplir tous les champs obligatoires (avec l'étoile rouge) pour valider votre rendez-vous.</div>`;
+            return; // Arrête l'envoi
+        }
+
         // Afficher message de chargement
         btnSubmit.disabled = true;
         btnSubmit.innerText = "Traitement en cours...";
         msgContainer.innerHTML = "";
 
         const rdvData = {
-            nom: sanitizeHTML(document.getElementById("rdv-nom").value),
-            telephone: sanitizeHTML(document.getElementById("rdv-tel").value),
+            nom: sanitizeHTML(inputNom),
+            telephone: sanitizeHTML(inputTel),
             email: sanitizeHTML(document.getElementById("rdv-email").value) || "Non fourni",
-            motif: sanitizeHTML(document.getElementById("rdv-motif").value),
-            date: dateInput.value,
-            heure: heureSelect.value,
+            motif: sanitizeHTML(inputMotif),
+            date: inputDate,
+            heure: inputHeure,
             notes: sanitizeHTML(document.getElementById("rdv-notes").value) || "Pas de note",
             statut: "En attente", // Statut initial de la réservation
             dateCreation: serverTimestamp(), // Enregistre la date exacte de soumission
