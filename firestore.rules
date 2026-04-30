@@ -17,9 +17,10 @@ service cloud.firestore {
     // - L'admin peut tout faire
     // - Les utilisateurs normaux peuvent créer un rdv, mais pas les lire ni les modifier
     match /rendezvous/{rdvId} {
-      // On permet la création (ajout de rdv). On valide optionnellement que la date est présente.
       allow create: if true; 
-      allow read, update, delete: if isAdmin();
+      // L'utilisateur peut lire et supprimer ses propres rdv, l'admin a tous les droits
+      allow read, delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+      allow update: if isAdmin();
     }
     
     // Collection Utilisateurs : Un utilisateur ne peut lire/modifier que son propre profil
