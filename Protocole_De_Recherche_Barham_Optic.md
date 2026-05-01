@@ -27,7 +27,7 @@ L'objectif général de ce projet est de numériser de bout en bout l'activité 
 
 Pour atteindre cet objectif général, nous nous fixons les objectifs spécifiques suivants :
 
-- Mettre en place un catalogue numérique public intégrant un système de recherche et de filtrage dynamique multicritères (par marque, prix, type et ciblage : Homme, Femme, Enfant).
+- Mettre en place un catalogue numérique public intégrant une interface utilisateur haut de gamme (Lookbook Masonry, démonstrateur interactif Avant/Après) ainsi qu'un système de recherche et de filtrage dynamique multicritères (par marque, prix, type et ciblage : Homme, Femme, Enfant).
 - Concevoir un module automatisé de prise de rendez-vous en ligne, incluant des garde-fous pour empêcher le surbooking de l'opticien.
 - Faciliter le tunnel d'achat en développant une intégration directe avec l'API WhatsApp pour valider les commandes.
 - Développer un tableau de bord (Dashboard) sécurisé (CRUD) permettant à l'administrateur de gérer son catalogue et de suivre les consultations sans nécessiter de compétences en informatique.

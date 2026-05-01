@@ -67,7 +67,7 @@ Avant d'écrire la moindre ligne de code, nous avons eu recours au **langage de 
 - *Les Diagrammes de Séquences* ont schématisé la chronologie des requêtes asynchrones entre l'interface utilisateur, la validation par Firebase Authentication, et l'enregistrement sur Cloud Firestore.
 
 ### 2. Le Stack Technologique Adopté
-- **Le Front-end (Côté Client) :** L'interface a été entièrement codée en `HTML5` (pour la sémantique), `CSS3` (avec les modes Grid et Flexbox implémentant un design Responsive) et animée via `JavaScript`.
+- **Le Front-end (Côté Client) :** L'interface a été entièrement codée en `HTML5` (pour la sémantique), `CSS3` (avec les modes Grid, Flexbox, et une architecture Masonry asymétrique intégrant des filtres visuels interactifs "Avant/Après") et animée via `JavaScript` pour garantir une expérience utilisateur (UX) très immersive et haut de gamme.
 - **Le Back-end (Côté Serveur) :** Le choix de l'architecture s'est porté sur un Backend-as-a-Service (BaaS) via Google Firebase. Nous exploitons spécifiquement :
   - *Firebase Authentication :* Pour la création protégée des profils patients et de l'accès Administrateur.
   - *Cloud Firestore :* Pour l'hébergement de notre base de données NoSQL distribuée (stockage au format JSON de notre catalogue avec traitement instantané).

@@ -393,11 +393,15 @@ La page d'accueil est le point d'entrée principal. Elle se décompose en un "He
 > *(Conseil : Insérer ici une capture d'écran globale de la page d'accueil avec son menu de navigation)*
 **Figure 4.1 : Page d'accueil présentant le Hero Section et la navigation primaire.**
 
-### 4.1.2 La vitrine des produits (Collections & Verres)
-La page dédiée aux produits affiche les articles de manière adaptative via une structure "CSS Grid". Sur un grand écran (PC), les produits s'alignent sur trois ou quatre colonnes, favorisant la comparaison. Sur mobile, cette grille se réduit dynamiquement à une ou deux colonnes, évitant à l'utilisateur de devoir zoomer ou scroller horizontalement. Chaque carte produit met en valeur la photographie de la monture, son nom, sa marque et l'incontournable bouton permettant de passer la commande.
+### 4.1.2 La vitrine des produits, Collections et Verres
+La présentation des produits a fait l'objet d'un soin particulier pour s'aligner sur les standards du e-commerce de luxe. Sur la page **Collections**, un *Lookbook Éditorial* a été mis en place en utilisant une disposition asymétrique de type "Masonry" (via la propriété CSS `column-count`). Cette disposition casse la monotonie des grilles traditionnelles et offre une expérience de navigation proche de celle d'un magazine de mode. Au survol des images, des micro-animations CSS interactives se déclenchent : un léger zoom de l'image, l'apparition d'un voile assombrissant, et la révélation fluide du nom de la marque (ex: Gucci, Cartier) ainsi que de l'icône Instagram, incitant fortement à l'engagement.
 
-> *(Conseil : Insérer ici une capture d'écran du rendu de la liste des lunettes sur écran d'ordinateur et une capture sur smartphone démontrant le responsive)*
-**Figure 4.2 : Affichage responsive du catalogue de montures.**
+Du côté de la page **Verres**, l'expertise technique est mise en valeur par un comparateur interactif "Avant / Après". Grâce à des propriétés avancées de filtres CSS (`filter: blur(), sepia(), contrast()`), nous simulons visuellement les défauts optiques (éblouissements nocturnes, reflets, lumière bleue). Au simple survol de la souris par l'utilisateur, les filtres se désactivent avec une transition douce, simulant l'effet correcteur immédiat du verre optique, le tout accompagné par le glissement de badges d'état ("Avant" / "Après"). Cette approche pédagogique permet au client de comprendre visuellement le bénéfice de chaque traitement optique sans recourir à de longues explications textuelles.
+
+La grille de la boutique (Nos Produits) affiche quant à elle les articles de manière adaptative via une structure "CSS Grid". Sur un grand écran (PC), les produits s'alignent sur trois ou quatre colonnes, favorisant la comparaison. Sur mobile, cette grille se réduit dynamiquement à une ou deux colonnes, évitant à l'utilisateur de devoir zoomer ou scroller horizontalement.
+
+> *(Conseil : Insérer ici une capture d'écran du Lookbook de la page Collections et une capture du système Avant/Après de la page Verres)*
+**Figure 4.2 : Interface du Lookbook asymétrique et démonstrateur interactif de traitements optiques.**
 
 ## 4.2 Côté Client : Implémentation de la vitrine dynamique
 
