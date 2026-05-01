@@ -152,24 +152,35 @@ Le diagramme des cas d'utilisation permet de structurer les besoins des utilisat
 ![Diagramme Cas d'Utilisation](images_uml/use_case.png)
 
 ```mermaid
-usecaseDiagram
-  actor Client
-  actor Administrateur
-  
-  rectangle "Système Web Barham Optic" {
-    Client --> (Consulter le catalogue de lunettes)
-    Client --> (Filtrer les produits)
-    Client --> (S'inscrire / Se connecter)
-    Client --> (Prendre un rendez-vous)
-    Client --> (Passer commande via WhatsApp)
+flowchart LR
+    Client((Client))
+    Admin((Administrateur))
     
-    (Prendre un rendez-vous) ..> (S'inscrire / Se connecter) : <<include>>
-    (Passer commande via WhatsApp) ..> (S'inscrire / Se connecter) : <<extend>>
+    subgraph "Système Web Barham Optic"
+        direction TB
+        uc1([Consulter le catalogue et Lookbook])
+        uc2([Filtrer les produits par catégorie])
+        uc3([Tester le simulateur de Verres Avant/Après])
+        uc4([S'inscrire / Se connecter])
+        uc5([Prendre un rendez-vous])
+        uc6([Passer commande via WhatsApp])
+        uc7([Gérer le catalogue complet - CRUD])
+        uc8([Visualiser les rendez-vous])
+    end
     
-    Administrateur --> (Se connecter)
-    Administrateur --> (Gérer le catalogue complet - CRUD)
-    Administrateur --> (Visualiser les rendez-vous)
-  }
+    Client --> uc1
+    Client --> uc2
+    Client --> uc3
+    Client --> uc4
+    Client --> uc5
+    Client --> uc6
+    
+    uc5 -. "<<include>>" .-> uc4
+    uc6 -. "<<extend>>" .-> uc4
+    
+    Admin --> uc4
+    Admin --> uc7
+    Admin --> uc8
 ```
 
 ### Descriptions textuelles des Cas d'Utilisation majeurs :
@@ -287,7 +298,8 @@ classDiagram
         +String marque
         +String categorie (homme, femme, enfant, mixte)
         +Double prix
-        +String imageUrl
+        +String imageBase64
+        +Boolean isNouveau
         +String quantiteStock
         +modifierStock()
         +appliquerFiltre()
