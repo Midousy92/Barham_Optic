@@ -18,8 +18,10 @@ service cloud.firestore {
     // - Les utilisateurs normaux peuvent créer un rdv, mais pas les lire ni les modifier
     match /rendezvous/{rdvId} {
       allow create: if true; 
-      // L'utilisateur peut lire et supprimer ses propres rdv, l'admin a tous les droits
-      allow read, delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+      // Tout le monde peut lire pour vérifier les disponibilités, 
+      // mais l'utilisateur ne peut supprimer que ses propres rdv (et l'admin a tous les droits)
+      allow read: if true;
+      allow delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
       allow update: if isAdmin();
     }
     
