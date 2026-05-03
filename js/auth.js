@@ -36,7 +36,7 @@ if (registerForm) {
             if(ancienMsg) ancienMsg.remove();
             
             const btnSubmit = registerForm.querySelector('.btn');
-            btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #ffd401; margin-bottom: 10px; font-weight: bold; text-align: center;">🎉 Compte créé avec succès ! Tu peux maintenant te connecter.</p>`);
+            btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #007bff; margin-bottom: 10px; font-weight: bold; text-align: center;">🎉 Compte créé avec succès ! Tu peux maintenant te connecter.</p>`);
 
             registerForm.reset(); 
             
@@ -118,7 +118,7 @@ if (forgotPasswordBtn && loginForm) {
             await sendPasswordResetEmail(auth, emailInput);
             
             const btnSubmit = loginForm.querySelector('.btn');
-            btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #ffd401; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.</p>`);
+            btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #007bff; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.</p>`);
             
         } catch (error) {
             console.error("Erreur lors de la réinitialisation:", error);
