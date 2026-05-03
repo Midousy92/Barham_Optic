@@ -72,7 +72,7 @@ if (loginForm) {
             if(ancienMsg) ancienMsg.remove();
             
             const btnSubmit = loginForm.querySelector('.btn');
-            btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #ffd401; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Connexion réussie ! Redirection...</p>`);
+            btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: white; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Connexion réussie ! Redirection...</p>`);
 
             loginForm.reset();
             
@@ -166,7 +166,7 @@ async function handleGoogleLogin(e, formElement) {
         if(ancienMsg) ancienMsg.remove();
         
         const btnSubmit = formElement.querySelector('.btn');
-        btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: #ffd401; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Connexion Google réussie ! Redirection...</p>`);
+        btnSubmit.insertAdjacentHTML('beforebegin', `<p class="firebase-msg" style="color: white; margin-bottom: 10px; font-weight: bold; text-align: center;">✅ Connexion Google réussie ! Redirection...</p>`);
         
         setTimeout(() => {
             window.location.href = "index.html"; 
