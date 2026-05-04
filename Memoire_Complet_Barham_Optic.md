@@ -493,16 +493,16 @@ Le processus de vérification de l'application "Barham Optic" a reposé sur des 
     Nous avons navigué sur l'application depuis divers navigateurs dominants (Google Chrome, Mozilla Firefox, Safari) et depuis des OS mobiles différents (Android et iOS). L'affichage HTML/CSS s'est avéré particulièrement résilient. Les dispositions flexbox et grid ont permis aux catalogues de lunettes de s'empiler logiquement sur petit écran de smartphone sans perte d'information.  
 2.  **Tests fonctionnels des Formulaires et d'Authentification :**
     Nous avons testé la robustesse du système d'authentification. Les tentatives de création de compte avec des mots de passe trop courts ou des emails invalides ont été toutes rejetées avec succès par les règles native de *Firebase Auth*. Par ailleurs, le test du blocage du surbooking des rendez-vous a fonctionné : créer 10 fausses réservations à une même date bloque catégoriquement toute 11ème tentative.
-3.  **Tests d'Ingérence Sécurité :**
-    En nous déconnectant du compte administrateur, nous avons tenté d'accéder d'insérer des produits ou de modifier la base en tapant directement l'URL `admin.html` dans le navigateur. Les requêtes de lecture/écriture ont été immédiatement rejetées (Permission Denied) grâce aux "Security Rules" paramétrées sur le serveur Cloud Firestore. 
+3.  **Tests de Réservation et d'Ingérence Sécurité :**
+    Nous avons testé la robustesse des requêtes Firestore. Lors de la prise de rendez-vous, nous avons résolu un défi majeur lié aux permissions (erreur de réseau/Permission Denied) en configurant finement les **Security Rules** de Firebase. Le système autorise désormais la lecture publique (`allow read: if true;`) des disponibilités horaires pour fluidifier la prise de rendez-vous, tout en interdisant catégoriquement toute modification, suppression ou accès global au catalogue par le biais de règles strictes réservées à l'administrateur. Les tentatives d'insertion non autorisées depuis l'URL `admin.html` ont été immédiatement rejetées avec succès.
 
 ## 5.2 Stratégie de Déploiement et Hébergement
 
 L'ultime phase correspond publiquement à l'hébergement du site web. 
-Du fait que l’écosystème global repose déjà sur Google, la suite logique retenue est **Firebase Hosting**. Il s’agit d’un service d'hébergement de contenu web de niveau de production pour les applications web. 
+Bien que l’écosystème global repose sur Google Firebase pour la base de données, nous avons opté pour la plateforme **Vercel** pour l'hébergement du site front-end. Vercel est un service d'hébergement cloud de niveau production optimisé pour les applications web modernes. 
 
-*   Via le terminal de commande (CLI Firebase), le répertoire du projet Front-end (contenant l'ensemble de nos fichiers HTML, CSS, JS et nos assets d'images) est compilé et uploadé sur les super-serveurs mondiaux du réseau de distribution de contenu (CDN) de Google.
-*   L'avantage principal réside dans l'obtention immédiate et forcée d'un certificat cryptographique de sécurité **SSL (HTTPS)**. Le site s'ouvre donc en mode "Sécurisé" sans coût supplémentaire, rassurant ainsi grandement le futur cyber-client.
+*   Le déploiement est automatisé via l'intégration continue (CI/CD) avec le dépôt **GitHub**. À chaque validation de code (commit), Vercel déploie instantanément la dernière version du site sur ses serveurs mondiaux (CDN).
+*   L'avantage principal de cette plateforme réside dans sa simplicité de configuration, sa rapidité de déploiement, et l'obtention immédiate d'un certificat cryptographique de sécurité **SSL (HTTPS)**. Le site (accessible via le domaine *barham-optic.vercel.app*) s'ouvre donc en mode "Sécurisé" sans coût supplémentaire, rassurant ainsi grandement le futur cyber-client. De plus, la configuration des domaines autorisés dans Firebase Authentication a été mise à jour pour inclure ce domaine Vercel, assurant un fonctionnement fluide des connexions (Google et Email) en production.
 
 ## 5.3 Bilan du Projet et Difficultés rencontrées
 

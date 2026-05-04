@@ -31,6 +31,7 @@ Pour atteindre cet objectif général, nous nous fixons les objectifs spécifiqu
 - Concevoir un module automatisé de prise de rendez-vous en ligne, incluant des garde-fous pour empêcher le surbooking de l'opticien.
 - Faciliter le tunnel d'achat en développant une intégration directe avec l'API WhatsApp pour valider les commandes.
 - Développer un tableau de bord (Dashboard) sécurisé (CRUD) permettant à l'administrateur de gérer son catalogue et de suivre les consultations sans nécessiter de compétences en informatique.
+- Assurer un déploiement continu et sécurisé de la plateforme sur le service cloud Vercel avec une gestion de version via GitHub.
 
 ### V. Hypothèse de recherche
 

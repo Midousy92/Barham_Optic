@@ -71,6 +71,7 @@ Avant d'écrire la moindre ligne de code, nous avons eu recours au **langage de 
 - **Le Back-end (Côté Serveur) :** Le choix de l'architecture s'est porté sur un Backend-as-a-Service (BaaS) via Google Firebase. Nous exploitons spécifiquement :
   - *Firebase Authentication :* Pour la création protégée des profils patients et de l'accès Administrateur.
   - *Cloud Firestore :* Pour l'hébergement de notre base de données NoSQL distribuée (stockage au format JSON de notre catalogue avec traitement instantané).
+- **Le Déploiement et l'Hébergement :** Le projet est déployé publiquement sur la plateforme Cloud **Vercel** avec intégration continue via **GitHub**, offrant une sécurité SSL native et une automatisation des mises à jour en production.
 
 ### 3. L'Approche Itérative (Inspiration Agile)
 Le développement a suivi un cycle évolutif et itératif : intégration des maquettes statiques d'abord, dynamisation par algorithmes JavaScript ensuite (le panier en LocalStorage), pour achever par le branchement aux serveurs Cloud Firebase et la restriction sécuritaire des routes privées. 
