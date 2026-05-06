@@ -148,9 +148,9 @@ async function chargerRendezVous() {
                 <td><i class='bx bxs-phone'></i> ${data.telephone}<br><small>${data.email !== "Non fourni" ? data.email : ""}</small></td>
                 <td><i>${data.motif}</i><br><small style="color:gray;">Notes: ${data.notes}</small></td>
                 <td><span style="background:${badgeBg}; color:${textColor}; padding:4px 8px; border-radius:12px; font-size:12px;">${data.statut}</span></td>
-                <td>
-                    <button class="btn-edit" onclick="changerStatutRdv('${data.id}', 'Confirmé')" title="Confirmer"><i class='bx bx-check'></i></button>
-                    <button class="btn-delete" onclick="supprimerRendezVous('${data.id}')" title="Supprimer / Annuler"><i class='bx bx-trash'></i></button>
+                <td style="display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center;">
+                    <button class="rdv-action-btn confirm-btn" onclick="changerStatutRdv('${data.id}', 'Confirmé')" title="Confirmer"><i class='bx bx-check'></i></button>
+                    <button class="rdv-action-btn delete-btn" onclick="supprimerRendezVous('${data.id}')" title="Supprimer / Annuler"><i class='bx bx-trash'></i></button>
                 </td>
             `;
             rdvTableBody.appendChild(tr);
