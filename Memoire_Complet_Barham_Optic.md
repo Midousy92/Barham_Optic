@@ -8,11 +8,14 @@ L'entreprise **Barham Optic**, spécialisée dans la vente de lunettes et la pre
 
 Face à ces constats, une **problématique** centrale se dégage : *Comment Barham Optic peut-elle moderniser la gestion de son activité, optimiser l'accueil de ses patients et accroître sa visibilité commerciale grâce aux outils du développement web moderne ?*
 
-Pour répondre à ce questionnement, l'**objectif principal** de notre projet a consisté à concevoir, développer et déployer une application web complète, dynamique et responsive, dédiée à la gestion des activités de Barham Optic. De manière spécifique, le système informatique mis en place vise à accomplir plusieurs objectifs intermédiaires : 
-1. **Digitaliser le catalogue** en offrant la possibilité aux clients de consulter les différents modèles (collections, verres, montures solaires) avec des filtres multicritères avancés et un ciblage précis (Homme, Femme, Enfant, Mixte).
-2. **Automatiser la prise de rendez-vous** grâce à une plateforme permettant aux clients de planifier, suivre et gérer leurs consultations ophtalmologiques, tout en respectant les limites de capacité journalière de l'opticien.
-3. **Faciliter le processus d'achat** en intégrant des technologies modernes comme l'API WhatsApp, offrant ainsi une commande rapide et un lien direct, sécurisant et rassurant entre le client et l'opticien.
-4. **Fournir un outil de gestion (Dashboard)** à l'administrateur de la boutique pour piloter le catalogue de produits, les utilisateurs et les rendez-vous de manière centralisée, avec une base de données en temps réel.
+### 2. Objectifs de l’étude
+**Objectif Principal :** Concevoir, développer et déployer une plateforme web dynamique pour digitaliser les activités de Barham Optic, couplée à un système de gestion de la relation client (CRM).
+**Objectifs Spécifiques :**
+*   Digitaliser le catalogue (Verres, Collections, Solaires) avec un système de filtres multicritères.
+*   Automatiser la prise de rendez-vous avec des quotas journaliers.
+*   Implémenter un historique médical et commercial (Dossier Patient) permettant le suivi des corrections visuelles et des achats dans un Espace Profil dédié.
+*   Intégrer un système de commande fluide via l'API WhatsApp.
+*   Développer un espace d'administration (Dashboard) pour la gestion autonome des stocks et de la patientèle.
 
 Pour mener à bien et structurer ce travail, nous avons opté pour la méthode **UML (Unified Modeling Language)** pour la phase d'analyse et de conception, ainsi que pour un stack technologique moderne incluant le langage JavaScript, HTML5, CSS3, et l'écosystème Cloud **Google Firebase** comme infrastructure Backend-as-a-Service (BaaS).
 
@@ -147,10 +150,7 @@ Nous avons répertorié deux acteurs principaux aux niveaux de privilèges bien 
 
 Le diagramme des cas d'utilisation permet de structurer les besoins des utilisateurs et les fonctionnalités correspondantes du système, sans entrer dans la logique technique de développement.
 
-*(Insérez ici le schéma du Cas d'Utilisation Global)*
-
-![Diagramme Cas d'Utilisation](images_uml/use_case.png)
-
+**Figure 2 : Diagramme de cas d'utilisation global du système**
 ```mermaid
 flowchart LR
     Client((Client))
@@ -158,13 +158,13 @@ flowchart LR
     
     subgraph "Système Web Barham Optic"
         direction TB
-        uc1([Consulter le catalogue et Lookbook])
-        uc2([Filtrer les produits par catégorie])
-        uc3([Tester le simulateur de Verres Avant/Après])
+        uc1([Consulter le catalogue])
+        uc2([Filtrer les produits])
+        uc3([Simulateur Avant/Après])
         uc4([S'inscrire / Se connecter])
         uc5([Prendre un rendez-vous])
-        uc6([Passer commande via WhatsApp])
-        uc7([Gérer le catalogue complet - CRUD])
+        uc6([Passer commande WhatsApp])
+        uc7([Gérer le catalogue CRUD])
         uc8([Visualiser les rendez-vous])
     end
     
@@ -214,59 +214,47 @@ Le diagramme de séquences est l'un des diagrammes comportementaux d'UML. Il per
 
 ### Diagramme de séquence du flux "Passer commande de lunettes"
 
-![Diagramme Séquence Commande](images_uml/sequence_commande.png)
-
+**Figure 6 : Diagramme de séquence du flux "Passer commande via WhatsApp"**
 ```mermaid
 sequenceDiagram
     actor Client
-    participant InterfaceUI as Front-End (Interface HTML/JS)
-    participant ServeurFB as Back-End (Base de données Firebase)
-    participant WhatsApp as API WhatsApp externe
+    participant InterfaceUI as Interface Web (JS)
+    participant ServeurFB as Firebase (Firestore)
+    participant WhatsApp as API WhatsApp
     
-    Client->>InterfaceUI: Navigue sur "Collections.html"
-    InterfaceUI->>ServeurFB: Requête : Récupérer tous les produits
-    ServeurFB-->>InterfaceUI: Retourne JSON (Liste des lunettes)
-    InterfaceUI-->>Client: Affiche les produits avec filtres
+    Client->>InterfaceUI: Navigue sur le Catalogue
+    InterfaceUI->>ServeurFB: Requête des produits (Lecture)
+    ServeurFB-->>InterfaceUI: Retourne liste des produits JSON
+    InterfaceUI-->>Client: Affiche les lunettes
     
-    Client->>InterfaceUI: Clique sur "Commander" sur une monture spécifique
-    InterfaceUI->>InterfaceUI: Génère le lien URL personnalisé (Numéro Barham Optic + Message produit)
-    InterfaceUI->>WhatsApp: Redirige via wa.me/numero?text=...
-    WhatsApp-->>Client: Ouvre l'application de messagerie avec pré-remplissage
-    Client->>WhatsApp: Confirme l'envoi du message au Gérant
+    Client->>InterfaceUI: Clique "Commander" (Monture X)
+    InterfaceUI->>InterfaceUI: Extraction Nom & Prix du produit
+    InterfaceUI->>InterfaceUI: Création et Encodage URL (wa.me/...)
+    InterfaceUI->>WhatsApp: Redirection vers l'application WhatsApp
+    WhatsApp-->>Client: Ouverture de la conversation
+    Client->>WhatsApp: Envoi du message au gérant
 ```
 *Analyse du déroulement :* Ce diagramme démontre l'efficience de l'architecture. Le serveur allège sa structure métier en déléguant la finalisation transactionnelle à l'API de messagerie cryptée WhatsApp.
 
-### Diagramme de séquence du flux "Prise de rendez-vous sécurisée"
+### Diagramme d'activité du flux "Prise de rendez-vous sécurisée"
 
-![Diagramme Séquence Rendez-vous](images_uml/sequence_rdv.png)
-
+**Figure 4 : Diagramme d'activité du processus de prise de rendez-vous en ligne**
 ```mermaid
-sequenceDiagram
-    actor Client
-    participant InterfaceUI as Formulaire Rendez-vous
-    participant Auth as Firebase Auth
-    participant CloudDB as Firebase Firestore
+stateDiagram-v2
+    [*] --> FormulaireRDV: Accès à la page
+    FormulaireRDV --> VerificationAuth: Validation du formulaire
     
-    Client->>InterfaceUI: Saisit date, heure et informations de contact
-    Client->>InterfaceUI: Clique sur "Valider"
-    InterfaceUI->>Auth: Vérifie l'état de connexion de l'utilisateur
+    VerificationAuth --> ConnexionRequise: Utilisateur non connecté
+    ConnexionRequise --> FormulaireRDV: Retour après connexion
     
-    alt Non Authentifié
-        Auth-->>InterfaceUI: Utilisateur non reconnu
-        InterfaceUI-->>Client: Redirection vers "connection.html"
-    else Utilisateur Authentifié
-        Auth-->>InterfaceUI: Token valide (UID)
-        InterfaceUI->>CloudDB: Requête d'insertion du RDV
-        CloudDB->>CloudDB: Vérifie si quotas (10 RDV/jour) ne sont pas dépassés
-        
-        alt Quota atteint
-            CloudDB-->>InterfaceUI: Erreur, date indisponible
-            InterfaceUI-->>Client: Affiche pop-up "Date complète"
-        else Quota respecté
-            CloudDB-->>InterfaceUI: Insertion réussie du Document RDV
-            InterfaceUI-->>Client: Message "Rendez-vous confirmé"
-        end
-    end
+    VerificationAuth --> VerificationDisponibilite: Utilisateur authentifié
+    
+    VerificationDisponibilite --> RejetQuota: Limite de 10 RDV/jour atteinte
+    RejetQuota --> FormulaireRDV: Alerte d'indisponibilité
+    
+    VerificationDisponibilite --> InsertionDB: Créneau disponible
+    InsertionDB --> ConfirmationRDV: Enregistrement réussi
+    ConfirmationRDV --> [*]
 ```
 
 ## 2.5 Modélisation des données (Diagramme de Classes métier)
@@ -276,49 +264,40 @@ Dans Firestore, les tables sont appelées **Collections**, les enregistrements s
 
 Toutefois, modéliser notre dictionnaire de données sous forme de diagramme de classes UML métiers reste essentiel pour structurer correctement les informations dans ce format JSON-like.
 
-![Diagramme de Classes Métier](images_uml/class_diagram.png)
-
+**Figure 3 : Diagramme de classes métier (Modélisation Firestore)**
 ```mermaid
 classDiagram
     class Utilisateur {
-        +String UID (PK)
+        +String UID
         +String nomComplet
         +String email
         +String telephone
-        +String role (client, admin)
+        +String role
         +Date dateCreation
-        +sInscrire()
-        +seConnecter()
-        +editerProfil()
     }
     
     class Produit {
-        +String ReferenceID (PK)
+        +String ReferenceID
         +String nomMonture
         +String marque
-        +String categorie (homme, femme, enfant, mixte)
+        +String categorie
         +Double prix
         +String imageBase64
         +Boolean isNouveau
-        +String quantiteStock
-        +modifierStock()
-        +appliquerFiltre()
     }
     
     class RendezVous {
-        +String RDV_ID (PK)
+        +String RDV_ID
         +Date dateRDV
         +String heureRDV
         +String motif
-        +String statut (confirmé, annulé)
+        +String statut
         +String fk_utilisateur_UID
-        +verifierDisponibilite()
-        +annulerRDV()
     }
 
     Utilisateur "1" o--  "0..*" RendezVous : effectue
     Administrateur "1" o-- "0..*" Produit : gère
-    Utilisateur <|-- Administrateur : hérite de
+    Utilisateur <|-- Administrateur : hérite
 ```
 
 *Analyse de la structure des entités :*
@@ -349,6 +328,27 @@ Dans cette architecture distribuée :
 2.  **Le Back-end (Côté Serveur)** est délégué à un fournisseur Cloud (en l'occurrence, Google) qui expose des API hyperscalables pour la gestion de l'authentification, la sauvegarde des informations et les requêtes à la base de données. 
 
 Ce choix se justifie amplement : il a permis de concentrer les efforts de développement sur l'expérience utilisateur et les fonctionnalités métiers (filtres dynamiques, prise de rendez-vous), tout en bénéficiant de l'infrastructure robuste et sécurisée de Google pour l'hébergement des données sensibles des patients, sans se soucier de la maintenance des serveurs matériels.
+
+**Figure 1 : Architecture fonctionnelle (Serverless/BaaS) de l'application web Barham Optic**
+```mermaid
+graph LR
+    subgraph Front-End [Client - Navigateur Web]
+        UI[Interface HTML / CSS / JS]
+    end
+
+    subgraph Back-End [Google Firebase - BaaS]
+        Auth[Firebase Authentication]
+        DB[(Cloud Firestore)]
+    end
+
+    subgraph Services Tiers
+        WA[API WhatsApp]
+    end
+
+    UI -- "Requêtes de connexion / JWT" --> Auth
+    UI -- "Requêtes asynchrones CRUD (JSON)" <--> DB
+    UI -- "Redirection avec URL encodée" --> WA
+```
 
 ## 3.2 Choix technologiques de la couche Présentation (Front-end)
 
@@ -471,7 +471,33 @@ Ce tableau de bord se distingue par son approche **CRUD (Create, Read, Update, D
 *   **Delete (Supprimer)** : Un bouton poubelle devant chaque rendez-vous traité ou produit épuisé déclenche la suppression instantanée de l'objet dans la base distante modifiant de facto le catalogue public à la seconde même.
 
 > *(Conseil : Insérer ici une belle capture globale du dashboard administrateur en insistant sur le tableau des produits ou de réservation)*
-**Figure 4.4 : Tableau de bord de l'administration du cabinet Barham Optic.**
+**Figure 8 : Tableau de bord de l'administration du cabinet Barham Optic.**
+
+**Figure 5 : Diagramme d'activité côté administrateur (Gestion CRUD)**
+```mermaid
+stateDiagram-v2
+    [*] --> DashboardAdmin: Connexion Admin réussie
+    
+    DashboardAdmin --> AjouterProduit: Clic sur Ajouter
+    DashboardAdmin --> ModifierProduit: Clic sur Modifier
+    DashboardAdmin --> SupprimerProduit: Clic sur Supprimer
+    
+    AjouterProduit --> SaisieInfos
+    SaisieInfos --> TeleversementImage
+    TeleversementImage --> CompressionBase64: Via algorithme JS
+    CompressionBase64 --> SauvegardeFirestore
+    
+    ModifierProduit --> EditionInfos
+    EditionInfos --> SauvegardeFirestore
+    
+    SupprimerProduit --> ConfirmationSuppression
+    ConfirmationSuppression --> SuppressionFirestore
+    
+    SauvegardeFirestore --> ActualisationCatalogue
+    SuppressionFirestore --> ActualisationCatalogue
+    
+    ActualisationCatalogue --> DashboardAdmin
+```
 
 ---
 *En guise de conclusion de ce chapitre, l’application Barham Optic est pleinement opérationnelle. Les processus cruciaux ont été codés, sécurisés, et l'interaction base de données est fluide. 

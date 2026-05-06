@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Médecin | Barham Optic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" type="image/png" href="../pages/images2/favicon_32.png">
+    <style>
+        .modal-content.dossier-complet {
+            width: 95%; max-width: 1000px; max-height: 90vh; overflow-y: auto; padding: 30px;
+        }
+        .dossier-section { margin-top: 20px; }
+        .dossier-section h2 { background-color: #3498db; color: #fff; padding: 10px; font-size: 16px; border-radius: 5px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; color: #2c3e50; }
+        .form-group input[type="text"], .form-group input[type="date"], .form-group input[type="number"], .form-group input[type="tel"], .form-group input[type="email"], .form-group select, .form-group textarea {
+            width: 100%; padding: 8px; border: 1px solid #bdc3c7; border-radius: 5px; box-sizing: border-box;
+        }
+        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee; }
+        .checkbox-item { display: flex; align-items: center; font-size: 13px; }
+        .checkbox-item input { margin-right: 5px; cursor: pointer; }
+        .examen-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .examen-table th, .examen-table td { border: 1px solid #bdc3c7; padding: 8px; text-align: center; font-size: 13px; }
+        .examen-table th { background-color: #ecf0f1; font-weight: 600; }
+        .examen-table input { border: none; background: transparent; text-align: center; padding: 5px; width: 100%; }
+        .examen-table input:focus { border-bottom: 1px solid #3498db; outline: none; }
+
+        /* ORDONNANCE PRINT STYLES */
+        #ordonnance-modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(44, 62, 80, 0.8); justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .ordonnance-content {
+            background-color: white; padding: 20px; border-radius: 10px; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .a4-preview {
+            background: white; padding: 20mm; color: #2c3e50; font-family: 'Poppins', sans-serif;
+        }
+        .ord-header { display: flex; justify-content: space-between; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px; }
+        .ord-header h1 { margin:0; font-size: 22px; color: #183153; text-transform: uppercase; }
+        .ord-header p { margin:2px 0; font-size: 12px; }
+        .ord-section { font-size: 12px; font-weight: bold; background: #3498db; color: #fff; padding: 4px 8px; border-radius: 3px; margin: 15px 0 10px 0; text-transform: uppercase;}
+        .ord-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; }
+        .ord-field { margin-bottom: 5px; }
+        .ord-field strong { color: #7f8fa6; font-size: 11px; text-transform: uppercase; display: block; margin-bottom:2px; }
+        .ord-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 12px; }
+        .ord-table th, .ord-table td { border: 1px solid #dcdde1; padding: 6px; text-align: left; }
+        .ord-table th { background: #f1f2f6; }
+        .ord-sign { display: flex; justify-content: space-between; margin-top: 30px; font-size: 12px; font-weight: bold; }
+        .ord-sign-box { height: 80px; width: 150px; border: 1px dashed #ccc; margin-top: 10px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #ordonnance-modal, #ordonnance-modal * { visibility: visible; }
+            #ordonnance-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: none; }
+            .ordonnance-content { width: 100%; max-width: 100%; padding: 0; border: none; box-shadow: none; overflow: visible; }
+            .a4-preview { padding: 0; }
+            .close-btn, .btn-print-ord { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" style="background: #2c3e50;">
+        <div class="logo-admin">
+            <h2>Espace Médical</h2>
+            <p>Dr. Hamidou</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" target="_blank"><i class='bx bx-home'></i> <span class="nav-text">Site public</span></a></li>
+            <li><a href="#" class="active" id="tab-patients"><i class='bx bx-user-circle'></i> <span class="nav-text">Patients (CRM)</span></a></li>
+            <li><a href="#" id="tab-rdv"><i class='bx bx-calendar'></i> <span class="nav-text">Consultations</span></a></li>
+            <li><a href="#" id="logout-btn"><i class='bx bx-log-out'></i> <span class="nav-text">Déconnexion</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- SECTION PATIENTS (CRM) -->
+        <div id="section-patients">
+            <header style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>Dossiers Patients (CRM)</h1>
+                <div style="position: relative;">
+                    <i class='bx bx-search' style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #7f8fa6; font-size: 18px;"></i>
+                    <input type="text" id="search-patient" placeholder="Recherche (Nom ou N°)..." style="padding: 10px 10px 10px 38px; border-radius: 25px; border: 1px solid #dcdde1; width: 280px; outline: none; font-family: inherit; font-size: 13px;">
+                </div>
+            </header>
+
+            <section class="products-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° Dossier</th>
+                            <th>Nom Patient</th>
+                            <th>Ordonnance (Impression)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="medecin-patients-table">
+                        <tr><td colspan='4'>Chargement en cours, veuillez patienter...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- SECTION RENDEZ-VOUS -->
+        <div id="section-rdv" style="display: none;">
+            <header>
+                <h1>Consultations Prévues</h1>
+            </header>
+
+            <section class="products-list"> 
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>Client</th>
+                            <th>Contact</th>
+                            <th>Motif</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="medecin-rdv-table">
+                        <tr><td colspan='6'>Chargement en cours, veuillez patienter...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+    </div>
+
+    <div id="patient-modal" class="modal">
+        <div class="modal-content dossier-complet">
+            <span class="close-btn" onclick="closePatientModal()">×</span>
+            <h2 id="patient-modal-title" style="margin-bottom: 20px; font-size:24px; color:#2c3e50; border-bottom:2px solid #3498db; padding-bottom:10px;">Dossier Médical (Complet)</h2>
+            <form id="patient-form">
+                <input type="hidden" id="patient-id">
+                
+                <div class="form-group" style="text-align: right;">
+                    <label style="display:inline-block; margin-right:10px;">Date de l'examen :</label>
+                    <input type="date" name="exam_date" id="exam-date" style="width:auto; display:inline-block;">
+                </div>
+
+                <!-- 1. Informations administratives du patient -->
+                <div class="dossier-section">
+                    <h2>1. Informations administratives</h2>
+                    <div class="grid-2">
+                        <div class="form-group"><label>Nom :</label><input type="text" name="admin_nom"></div>
+                        <div class="form-group"><label>Prénom :</label><input type="text" name="admin_prenom"></div>
+                    </div>
+                    <div class="grid-4">
+                        <div class="form-group"><label>Date de naissance :</label><input type="date" name="admin_dob"></div>
+                        <div class="form-group"><label>Âge :</label><input type="number" name="admin_age"></div>
+                        <div class="form-group"><label>Sexe :</label>
+                            <select name="admin_sexe">
+                                <option value="">Sélectionner</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Téléphone :</label><input type="tel" name="admin_tel"></div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>Email :</label><input type="email" name="admin_email"></div>
+                        <div class="form-group"><label>Assurance / Couverture médicale :</label><input type="text" name="admin_assurance"></div>
+                    </div>
+                    <div class="form-group"><label>Adresse complète :</label><input type="text" name="admin_adresse"></div>
+                    <div class="form-group"><label>Personne à contacter en cas d’urgence :</label><input type="text" name="admin_urgence"></div>
+                </div>
+
+                <!-- 2. Motif de consultation -->
+                <div class="dossier-section">
+                    <h2>2. Motif de consultation</h2>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="motif_baisse_vision"> Baisse de vision</label>
+                        <label class="checkbox-item"><input type="checkbox" name="motif_vision_floue"> Vision floue</label>
+                        <label class="checkbox-item"><input type="checkbox" name="motif_douleur"> Douleur oculaire</label>
+                        <label class="checkbox-item"><input type="checkbox" name="motif_rougeur"> Rougeur</label>
+                        <label class="checkbox-item"><input type="checkbox" name="motif_routine"> Contrôle de routine</label>
+                        <label class="checkbox-item"><input type="checkbox" name="motif_traumatisme"> Traumatisme</label>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;"><label>Autres symptômes / Détails :</label><input type="text" name="motif_autres"></div>
+                </div>
+
+                <!-- 3. Antécédents médicaux généraux -->
+                <div class="dossier-section">
+                    <h2>3. Antécédents médicaux généraux</h2>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="ant_med_diabete"> Diabète</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_med_hta"> Hypertension artérielle (HTA)</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_med_cardio"> Maladies cardiovasculaires</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_med_allergies"> Allergies</label>
+                    </div>
+                    <div class="grid-2" style="margin-top:10px;">
+                        <div class="form-group"><label>Traitements en cours :</label><textarea name="ant_med_traitements" rows="2"></textarea></div>
+                        <div class="form-group"><label>Chirurgies antérieures / Autres :</label><textarea name="ant_med_autres" rows="2"></textarea></div>
+                    </div>
+                </div>
+
+                <!-- 4. Antécédents ophtalmologiques -->
+                <div class="dossier-section">
+                    <h2>4. Antécédents ophtalmologiques</h2>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="ant_oph_lunettes"> Port de lunettes</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_oph_lentilles"> Port de lentilles</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_oph_glaucome"> Glaucome</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_oph_cataracte"> Cataracte</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_oph_retine"> Pathologies rétiniennes</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_oph_trauma"> Traumatisme oculaire</label>
+                    </div>
+                    <div class="grid-2" style="margin-top:10px;">
+                        <div class="form-group"><label>Anciennes prescriptions :</label><textarea name="ant_oph_prescriptions" rows="2"></textarea></div>
+                        <div class="form-group"><label>Chirurgies ou traitements oph en cours :</label><textarea name="ant_oph_traitements" rows="2"></textarea></div>
+                    </div>
+                </div>
+
+                <!-- 5. Antécédents familiaux -->
+                <div class="dossier-section">
+                    <h2>5. Antécédents familiaux</h2>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="ant_fam_glaucome"> Glaucome familial</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_fam_cecite"> Cécité</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_fam_diabete"> Diabète familial</label>
+                        <label class="checkbox-item"><input type="checkbox" name="ant_fam_hta"> Hypertension familiale</label>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;"><label>Maladies héréditaires / Précisions :</label><input type="text" name="ant_fam_autres"></div>
+                </div>
+
+                <!-- 6. Habitudes et mode de vie -->
+                <div class="dossier-section">
+                    <h2>6. Habitudes et mode de vie</h2>
+                    <div class="grid-3">
+                        <div class="form-group"><label>Profession :</label><input type="text" name="hab_profession"></div>
+                        <div class="form-group"><label>Temps d’écran (h/jour) :</label><input type="number" name="hab_ecrans"></div>
+                        <div class="form-group"><label>Conduite de nuit :</label>
+                            <select name="hab_conduite">
+                                <option value="">Sélectionner</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="hab_tabac"> Tabac</label>
+                        <label class="checkbox-item"><input type="checkbox" name="hab_alcool"> Alcool</label>
+                        <label class="checkbox-item"><input type="checkbox" name="hab_expositions"> Expositions pro (poussière, chimique)</label>
+                    </div>
+                </div>
+
+                <!-- 7. Examen ophtalmologique -->
+                <div class="dossier-section">
+                    <h2>7. Examen ophtalmologique</h2>
+                    <label style="font-size:13px; font-weight:bold; display:block; margin-bottom:5px;">Réfraction et Acuité Visuelle</label>
+                    <table class="examen-table">
+                        <thead>
+                            <tr>
+                                <th>Œil</th>
+                                <th>Acuité Sans Corr.</th>
+                                <th>Sphère</th>
+                                <th>Cylindre</th>
+                                <th>Axe</th>
+                                <th>Add.</th>
+                                <th>Acuité Avec Corr.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>OD (Droit)</b></td>
+                                <td><input type="text" name="exam_od_ac_sans"></td>
+                                <td><input type="text" name="od_sph" id="od-sph"></td>
+                                <td><input type="text" name="od_cyl" id="od-cyl"></td>
+                                <td><input type="text" name="od_axe" id="od-axe"></td>
+                                <td><input type="text" name="exam_od_add"></td>
+                                <td><input type="text" name="exam_od_ac_avec"></td>
+                            </tr>
+                            <tr>
+                                <td><b>OG (Gauche)</b></td>
+                                <td><input type="text" name="exam_og_ac_sans"></td>
+                                <td><input type="text" name="og_sph" id="og-sph"></td>
+                                <td><input type="text" name="og_cyl" id="og-cyl"></td>
+                                <td><input type="text" name="og_axe" id="og-axe"></td>
+                                <td><input type="text" name="exam_og_add"></td>
+                                <td><input type="text" name="exam_og_ac_avec"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="grid-3">
+                        <div class="form-group"><label>Tension intraoculaire :</label><input type="text" name="exam_tension"></div>
+                        <div class="form-group"><label>Examen des paupières :</label><input type="text" name="exam_paupieres"></div>
+                        <div class="form-group"><label>Examen de la cornée :</label><input type="text" name="exam_cornee"></div>
+                        <div class="form-group"><label>Cristallin :</label><input type="text" name="exam_cristallin"></div>
+                        <div class="form-group"><label>Fond d’œil :</label><input type="text" name="exam_fond"></div>
+                        <div class="form-group"><label>Motilité / Champ visuel :</label><input type="text" name="exam_champ"></div>
+                    </div>
+                </div>
+
+                <!-- 8. Examens complémentaires -->
+                <div class="dossier-section">
+                    <h2>8. Examens complémentaires</h2>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="comp_oct"> OCT</label>
+                        <label class="checkbox-item"><input type="checkbox" name="comp_topo"> Topographie cornéenne</label>
+                        <label class="checkbox-item"><input type="checkbox" name="comp_pachy"> Pachymétrie</label>
+                        <label class="checkbox-item"><input type="checkbox" name="comp_angio"> Angiographie</label>
+                        <label class="checkbox-item"><input type="checkbox" name="comp_photo"> Photographie fond d’œil</label>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;"><label>Résultats / Autres examens :</label><textarea name="comp_resultats" rows="2"></textarea></div>
+                </div>
+
+                <!-- 9. Diagnostic -->
+                <div class="dossier-section">
+                    <h2>9. Diagnostic</h2>
+                    <div class="form-group"><label>Diagnostic principal :</label><input type="text" name="diag_principal" style="font-weight:bold; color:#e74c3c;"></div>
+                    <div class="grid-3">
+                        <div class="form-group"><label>Diagnostics associés :</label><input type="text" name="diag_associes"></div>
+                        <div class="form-group"><label>Gravité :</label>
+                            <select name="diag_gravite">
+                                <option value="">Sélectionner</option>
+                                <option value="Légère">Légère</option>
+                                <option value="Modérée">Modérée</option>
+                                <option value="Sévère">Sévère</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Évolution :</label><input type="text" name="diag_evolution"></div>
+                    </div>
+                </div>
+
+                <!-- 10. Traitement et suivi -->
+                <div class="dossier-section">
+                    <h2>10. Traitement et suivi</h2>
+                    <div class="grid-2">
+                        <div class="form-group"><label>Prescription de lunettes / lentilles :</label><textarea name="trait_prescription" rows="2"></textarea></div>
+                        <div class="form-group"><label>Médicaments / Collyres :</label><textarea name="trait_medocs" rows="2"></textarea></div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>Recommandations / Chirurgie :</label><textarea name="trait_recos" rows="2"></textarea></div>
+                        <div class="form-group"><label>Date du prochain rendez-vous :</label><input type="date" name="trait_prochain_rdv"></div>
+                    </div>
+                </div>
+
+                <!-- 11. Signature -->
+                <div class="dossier-section">
+                    <div class="grid-2">
+                        <div class="form-group"><label>Nom du médecin :</label><input type="text" name="sign_nom" value="Dr. Hamidou" readonly></div>
+                        <div class="form-group"><label>Date de validation :</label><input type="date" name="sign_date"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="save-patient-btn" style="width: 100%; margin-top: 30px; font-size: 16px;">Enregistrer le dossier complet</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Ordonnance -->
+    <div id="ordonnance-modal">
+        <div class="ordonnance-content">
+            <span class="close-btn" onclick="closeOrdonnanceModal()" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #7f8fa6;">×</span>
+            <button class="btn-submit btn-print-ord" onclick="window.print()" style="margin-bottom: 15px; background: #2ecc71; width: auto;"><i class='bx bx-printer'></i> Lancer l'impression</button>
+            
+            <div class="a4-preview" id="ordonnance-print-area">
+                <div class="ord-header">
+                    <div>
+                        <h1>Barham Optic</h1>
+                        <p><strong>Dr. Hamidou</strong> - Ophtalmologiste</p>
+                        <p>📍 Dakar, Sénégal | 📞 +221 77 519 72 41</p>
+                        <p>✉️ barhamoptic70@gmail.com</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p>Dakar, le <span id="ord-date-jour" style="border-bottom: 1px solid #ccc; padding:0 10px;"></span></p>
+                    </div>
+                </div>
+
+                <div class="ord-section">Informations du Patient</div>
+                <div class="ord-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="ord-field"><strong>Nom & Prénom</strong><span id="ord-patient-nom">-</span></div>
+                    <div class="ord-field"><strong>Âge / Sexe</strong><span id="ord-patient-age">-</span></div>
+                    <div class="ord-field"><strong>N° Dossier</strong><span id="ord-patient-id" style="font-size:10px;">-</span></div>
+                </div>
+
+                <div class="ord-section">Diagnostic & Motif</div>
+                <div class="ord-grid">
+                    <div class="ord-field"><strong>Motif / Diagnostic principal</strong><span id="ord-diag">-</span></div>
+                    <div class="ord-field"><strong>Observations</strong><span id="ord-obs">-</span></div>
+                </div>
+
+                <div class="ord-section">Prescription Médicale (Collyres & Médicaments)</div>
+                <div class="ord-field"><span id="ord-medocs" style="white-space: pre-wrap;">Aucun traitement médical prescrit.</span></div>
+
+                <div class="ord-section">Prescription Optique (Lunettes / Lentilles)</div>
+                <table class="ord-table">
+                    <thead>
+                        <tr><th>Œil</th><th>Sphère</th><th>Cylindre</th><th>Axe</th><th>Acuité avec corr.</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>OD (Droit)</b></td><td id="ord-od-sph"></td><td id="ord-od-cyl"></td><td id="ord-od-axe"></td><td id="ord-od-ac"></td></tr>
+                        <tr><td><b>OG (Gauche)</b></td><td id="ord-og-sph"></td><td id="ord-og-cyl"></td><td id="ord-og-axe"></td><td id="ord-og-ac"></td></tr>
+                    </tbody>
+                </table>
+                <div class="ord-grid" style="margin-top: 10px;">
+                    <div class="ord-field"><strong>Prescription spécifique</strong><span id="ord-opt-details" style="white-space: pre-wrap;"></span></div>
+                </div>
+
+                <div class="ord-section">Recommandations & Suivi</div>
+                <div class="ord-grid">
+                    <div class="ord-field"><strong>Recommandations</strong><span id="ord-recos" style="white-space: pre-wrap;"></span></div>
+                    <div class="ord-field"><strong>Prochain contrôle</strong><span id="ord-rdv"></span></div>
+                </div>
+
+                <div class="ord-sign">
+                    <div>SIGNATURE PATIENT<div class="ord-sign-box" style="border:none;"></div></div>
+                    <div style="text-align: right;">CACHET & SIGNATURE MÉDECIN<div class="ord-sign-box"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialisation Firebase -->
+    <script type="module" src="js/firebase-init.js?v=2"></script>
+    <!-- Logique Médecin -->
+    <script type="module" src="js/medecin.js"></script>
+</body>
+</html>

@@ -49,6 +49,17 @@ onAuthStateChanged(auth, (user) => {
                     connexionLink.parentElement.parentElement.insertBefore(liAdmin, connexionLink.parentElement);
                 }
             }
+
+            // AJOUT DU LIEN ESPACE MÉDECIN (Uniquement pour skhamidou03@gmail.com)
+            if (user.email === "skhamidou03@gmail.com") {
+                if (!document.getElementById('nav-medecin-link')) {
+                    const liMedecin = document.createElement('li');
+                    liMedecin.id = 'nav-medecin-link';
+                    liMedecin.innerHTML = '<a href="medecin.html" style="color: #ffd401; font-weight: bold;">Espace Médecin</a>';
+                    // On l'insère juste avant le bouton "Mon Profil"
+                    connexionLink.parentElement.parentElement.insertBefore(liMedecin, connexionLink.parentElement);
+                }
+            }
             
             // Plus besoin d'action de déconnexion ici, car le bouton pointe maintenant vers "profil.html"
             // La déconnexion sera gérée directement à l'intérieur de la page Profil.

@@ -52,6 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     const userData = userDoc.data();
                     displayName.innerText = userData.username || "Client Barham";
                     inputUsername.value = userData.username || "";
+                    
+                    // Remplissage du dossier médical
+                    if (userData.dossierMedical && Object.keys(userData.dossierMedical).length > 0) {
+                        const d = userData.dossierMedical;
+                        const dateExam = d.exam_date || d.date;
+                        document.getElementById('profil-exam-date').innerHTML = `Mise à jour : <em>${dateExam ? new Date(dateExam).toLocaleDateString('fr-FR') : 'Date non précisée'}</em>`;
+                        
+                        document.getElementById('btn-view-dossier').style.display = 'inline-block';
+                        document.getElementById('no-dossier-msg').style.display = 'none';
+                        
+                        // Préparer le contenu du modal complet
+                        window.patientDossierComplet = d; 
+                    } else {
+                        document.getElementById('btn-view-dossier').style.display = 'none';
+                        document.getElementById('no-dossier-msg').style.display = 'block';
+                    }
+                    
                 } else {
                     // Si le document Firestore n'a pas été créé lors de l'inscription
                     displayName.innerText = "Nouveau Client";
@@ -222,5 +239,124 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     };
+
+    // -----------------------------------------------------------------
+    // GESTION DU MODAL DOSSIER MEDICAL
+    // -----------------------------------------------------------------
+    const btnViewDossier = document.getElementById("btn-view-dossier");
+    const viewDossierModal = document.getElementById("view-dossier-modal");
+    const closeViewDossier = document.getElementById("close-view-dossier");
+    const dossierContentView = document.getElementById("dossier-content-view");
+
+    if (btnViewDossier) {
+        btnViewDossier.addEventListener("click", () => {
+            const d = window.patientDossierComplet;
+            if (!d) return;
+
+            const labels = {
+                exam_date: "Date de l'examen",
+                admin_nom: "Nom", admin_prenom: "Prénom", admin_dob: "Date de naissance", admin_age: "Âge", admin_sexe: "Sexe", admin_tel: "Téléphone", admin_email: "Email", admin_assurance: "Assurance", admin_adresse: "Adresse", admin_urgence: "Contact d'urgence",
+                motif_baisse_vision: "Baisse de vision", motif_vision_floue: "Vision floue", motif_douleur: "Douleur oculaire", motif_rougeur: "Rougeur", motif_routine: "Contrôle de routine", motif_traumatisme: "Traumatisme", motif_autres: "Autres motifs",
+                ant_med_diabete: "Diabète", ant_med_hta: "Hypertension", ant_med_cardio: "Maladies cardiovasculaires", ant_med_allergies: "Allergies", ant_med_traitements: "Traitements en cours", ant_med_autres: "Autres antécédents",
+                ant_oph_lunettes: "Port de lunettes", ant_oph_lentilles: "Port de lentilles", ant_oph_glaucome: "Glaucome", ant_oph_cataracte: "Cataracte", ant_oph_retine: "Pathologies rétiniennes", ant_oph_trauma: "Traumatisme oculaire", ant_oph_prescriptions: "Anciennes prescriptions", ant_oph_traitements: "Traitements ophtalmologiques en cours",
+                ant_fam_glaucome: "Glaucome familial", ant_fam_cecite: "Cécité familiale", ant_fam_diabete: "Diabète familial", ant_fam_hta: "Hypertension familiale", ant_fam_autres: "Autres antécédents familiaux",
+                hab_profession: "Profession", hab_ecrans: "Temps d'écran (h/j)", hab_conduite: "Conduite de nuit", hab_tabac: "Tabac", hab_alcool: "Alcool", hab_expositions: "Expositions professionnelles",
+                od_sph: "OD - Sphère", od_cyl: "OD - Cylindre", od_axe: "OD - Axe", exam_od_ac_sans: "OD - Acuité sans correction", exam_od_add: "OD - Addition", exam_od_ac_avec: "OD - Acuité avec correction",
+                og_sph: "OG - Sphère", og_cyl: "OG - Cylindre", og_axe: "OG - Axe", exam_og_ac_sans: "OG - Acuité sans correction", exam_og_add: "OG - Addition", exam_og_ac_avec: "OG - Acuité avec correction",
+                exam_tension: "Tension intraoculaire", exam_paupieres: "Paupières", exam_cornee: "Cornée", exam_cristallin: "Cristallin", exam_fond: "Fond d'œil", exam_champ: "Champ visuel",
+                comp_oct: "OCT", comp_topo: "Topographie", comp_pachy: "Pachymétrie", comp_angio: "Angiographie", comp_photo: "Photo fond d'œil", comp_resultats: "Résultats examens complémentaires",
+                diag_principal: "Diagnostic principal", diag_associes: "Diagnostics associés", diag_gravite: "Gravité", diag_evolution: "Évolution",
+                trait_prescription: "Prescription lunettes/lentilles", trait_medocs: "Médicaments/Collyres", trait_recos: "Recommandations/Chirurgie", trait_prochain_rdv: "Date prochain RDV",
+                sign_nom: "Médecin traitant", sign_date: "Date de validation"
+            };
+
+            let html = "<div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;'>";
+            for (let key in d) {
+                if (d[key] === "" || d[key] === false || d[key] === "false") continue;
+                let value = d[key];
+                if (value === true || value === "true") value = "Oui";
+                let label = labels[key] || key;
+                html += `
+                    <div style="background: #f8f9fa; padding: 10px 15px; border-left: 3px solid #3498db; border-radius: 4px;">
+                        <strong style="color: #2c3e50; display:block; margin-bottom:5px;">${label}</strong>
+                        <span style="color: #555; white-space: pre-wrap;">${value}</span>
+                    </div>
+                `;
+            }
+            html += "</div>";
+            if(Object.keys(d).length === 0) html = "<p>Aucune information médicale enregistrée.</p>";
+
+            dossierContentView.innerHTML = html;
+            viewDossierModal.style.display = "flex";
+        });
+    }
+
+    if (closeViewDossier) {
+        closeViewDossier.addEventListener("click", () => {
+            viewDossierModal.style.display = "none";
+        });
+    }
+    // -----------------------------------------------------------------
+    // GESTION IMPRESSION ORDONNANCE (PATIENT)
+    // -----------------------------------------------------------------
+    const btnPrintOrd = document.getElementById("btn-print-ord");
+    const ordonnanceModal = document.getElementById("ordonnance-modal");
+    const closeOrdModal = document.getElementById("close-ord-modal");
+
+    if (btnPrintOrd) {
+        btnPrintOrd.addEventListener("click", () => {
+            const d = window.patientDossierComplet;
+            if (!d) return;
+
+            document.getElementById("ord-date-jour").innerText = new Date().toLocaleDateString('fr-FR');
+            
+            const username = document.getElementById("display-name").innerText;
+            document.getElementById("ord-patient-nom").innerText = `${d.admin_nom || ''} ${d.admin_prenom || ''}`.trim() || username || '-';
+            document.getElementById("ord-patient-age").innerText = `${d.admin_age ? d.admin_age + ' ans' : '-'} / ${d.admin_sexe || '-'}`;
+            const shortId = currentUserId ? currentUserId.substring(0, 6).toUpperCase() : '-';
+            document.getElementById("ord-patient-id").innerText = "#" + shortId;
+
+            let motifs = [];
+            if(d.motif_baisse_vision) motifs.push("Baisse de vision");
+            if(d.motif_vision_floue) motifs.push("Vision floue");
+            if(d.motif_douleur) motifs.push("Douleur");
+            if(d.motif_rougeur) motifs.push("Rougeur");
+            if(d.motif_routine) motifs.push("Routine");
+            if(d.motif_traumatisme) motifs.push("Traumatisme");
+            if(d.motif_autres) motifs.push(d.motif_autres);
+            
+            let motifFinal = motifs.length > 0 ? motifs.join(', ') : '-';
+            if(d.diag_principal) motifFinal += ` | Diag: ${d.diag_principal}`;
+            
+            document.getElementById("ord-diag").innerText = motifFinal;
+            document.getElementById("ord-obs").innerText = d.diag_associes || '-';
+
+            document.getElementById("ord-medocs").innerText = d.trait_medocs || 'Aucun traitement médical prescrit.';
+
+            document.getElementById("ord-od-sph").innerText = d.od_sph || '-';
+            document.getElementById("ord-od-cyl").innerText = d.od_cyl || '-';
+            document.getElementById("ord-od-axe").innerText = d.od_axe || '-';
+            document.getElementById("ord-od-ac").innerText = d.exam_od_ac_avec || '-';
+
+            document.getElementById("ord-og-sph").innerText = d.og_sph || '-';
+            document.getElementById("ord-og-cyl").innerText = d.og_cyl || '-';
+            document.getElementById("ord-og-axe").innerText = d.og_axe || '-';
+            document.getElementById("ord-og-ac").innerText = d.exam_og_ac_avec || '-';
+
+            const optDetails = [d.trait_prescription, d.trait_recos].filter(Boolean).join('\n');
+            document.getElementById("ord-opt-details").innerText = optDetails || '-';
+
+            document.getElementById("ord-recos").innerText = d.trait_recos || '-';
+            document.getElementById("ord-rdv").innerText = d.trait_prochain_rdv ? new Date(d.trait_prochain_rdv).toLocaleDateString('fr-FR') : '-';
+
+            ordonnanceModal.style.display = "flex";
+        });
+    }
+
+    if (closeOrdModal) {
+        closeOrdModal.addEventListener("click", () => {
+            ordonnanceModal.style.display = "none";
+        });
+    }
 
 });

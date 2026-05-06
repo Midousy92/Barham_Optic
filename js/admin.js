@@ -2,10 +2,10 @@
 
 import { auth, db } from "./firebase-init.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 
-// L'unique adresse email autorisée à accéder au panel d'administration
+// L'unique adresse email autorisée à accéder au panel d'administration classique (Produits)
 const ADMIN_EMAIL = "barhamoptic70@gmail.com";
 
 let currentProducts = [];
@@ -199,6 +199,8 @@ window.changerStatutRdv = async function(id, nouveauStatut) {
         }
     }
 }
+
+
 
 
 // 4. Gestion de la Fenêtre Modale (Popup)
