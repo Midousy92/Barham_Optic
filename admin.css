@@ -191,12 +191,14 @@ td img {
 
 .modal-content {
     background-color: white;
-    padding: 40px;
+    padding: 30px;
     border-radius: 15px;
     width: 450px;
     position: relative;
     box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
     animation: slideIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 @keyframes slideIn {
@@ -225,7 +227,7 @@ td img {
 #product-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 #product-form label {

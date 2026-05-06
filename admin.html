@@ -42,6 +42,7 @@
                             <th>Nom</th>
                             <th>Marque</th>
                             <th>Prix</th>
+                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -100,6 +101,13 @@
                     <option value="Femme">Femme</option>
                     <option value="Enfant">Enfant</option>
                     <option value="Mixte">Mixte</option>
+                </select>
+
+                <label for="product-status">Statut de Disponibilité</label>
+                <select id="product-status" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                    <option value="en_stock">🟢 En Stock</option>
+                    <option value="epuise">🔴 Épuisé (Rupture)</option>
+                    <option value="masque">👁️‍🗨️ Masqué (Brouillon)</option>
                 </select>
 
                 <label for="product-price">Prix (en FCFA)</label>

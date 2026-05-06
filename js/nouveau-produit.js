@@ -12,6 +12,10 @@ async function afficherDernierProduit() {
 
         snapshot.forEach((doc) => {
             const data = doc.data();
+            
+            // Ignorer les produits masqués ou épuisés pour la page d'accueil
+            if (data.status === "masque" || data.status === "epuise") return;
+
             dernierProduitSansTimestamp = data; // Garder une trace au cas où il n'y aurait pas de timestamps
             if (data.createdAt && data.createdAt > lastTimestamp) {
                 lastTimestamp = data.createdAt;

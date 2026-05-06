@@ -13,7 +13,7 @@ Face à ces constats, une **problématique** centrale se dégage : *Comment Barh
 **Objectifs Spécifiques :**
 *   Digitaliser le catalogue (Verres, Collections, Solaires) avec un système de filtres multicritères.
 *   Automatiser la prise de rendez-vous avec des quotas journaliers.
-*   Implémenter un historique médical et commercial (Dossier Patient) permettant le suivi des corrections visuelles et des achats dans un Espace Profil dédié.
+*   Implémenter un historique médical complet (Dossier Patient) doté d'un outil de recherche intelligent par identifiant court (N° de dossier), et permettre la génération d'ordonnances médicales dynamiques et imprimables pour le médecin et le patient.
 *   Intégrer un système de commande fluide via l'API WhatsApp.
 *   Développer un espace d'administration (Dashboard) pour la gestion autonome des stocks et de la patientèle.
 
@@ -269,9 +269,11 @@ Toutefois, modéliser notre dictionnaire de données sous forme de diagramme de 
 classDiagram
     class Utilisateur {
         +String UID
+        +String shortId
         +String nomComplet
         +String email
         +String telephone
+        +Object dossierMedical
         +String role
         +Date dateCreation
     }
@@ -461,7 +463,14 @@ Lors de la validation, le script JavaScript interroge la collection Firestore d�
 > *(Conseil : Insérer ici une capture d'écran du petit formulaire de prise de rendez-vous)*
 **Figure 4.3 : Interface de la réservation de rendez-vous client.**
 
-## 4.4 L'Espace Administration (Le Dashboard)
+## 4.4 Le CRM Médical et l'Impression d'Ordonnances
+
+Conscient des besoins spécifiques d'un cabinet d'ophtalmologie ou d'optique, nous avons développé un module CRM complet baptisé **Espace Médecin**. Ce module remplace avantageusement les fiches papier.
+*   **Identifiants Courts et Recherche :** Au lieu d'utiliser de longs identifiants Firebase (ex: "a7X9p2Lm..."), le système génère automatiquement un **Numéro de Dossier court** (#A7X9P2) à 6 caractères, facilitant la communication. Une barre de recherche réactive permet de filtrer instantanément les patients par nom ou numéro de dossier.
+*   **Le Dossier Médical Structuré :** Le médecin peut éditer un dossier structuré en 11 sections cliniques allant des informations administratives aux recommandations cliniques et dates de prochain contrôle.
+*   **Impression d'Ordonnance Dynamique :** Une fois le dossier renseigné, le système est capable de générer en un clic une **Ordonnance Médicale formatée pour l'impression A4**, reprenant automatiquement les données du patient, les diagnostics, l'âge et la correction visuelle. Ce document officiel est également accessible et imprimable par le patient depuis son propre **Espace Profil**.
+
+## 4.5 L'Espace Administration (Le Dashboard)
 
 L’indépendance du gérant face aux informaticiens a été assurée par la création de la page privée `admin.html`. Son accès est formellement encadré par des *Security Rules* paramétrées directement sur l'interface cloud Firebase : les requêtes de lecture globale ou de suppression refusent tout accès (erreur 403 Forbidden) dont le token UID (User ID) ne correspond pas à l'adresse administrateur validée.
 

@@ -41,6 +41,22 @@ async function chargerProduits() {
         snapshot.forEach((doc) => {
             const produit = doc.data(); // les infos de la lunette (nom, marque, prix, image)
 
+            // Si le produit est masqué, on ne le génère même pas
+            if (produit.status === "masque") return;
+
+            // Gestion du badge "Épuisé" et désactivation du bouton
+            let badgeHtml = "";
+            let btnDisabledAttr = "";
+            let btnText = "<i class='bx bx-cart-add'></i> Ajouter au panier";
+            let btnStyle = "";
+
+            if (produit.status === "epuise") {
+                badgeHtml = `<span class="badge" style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 5px; position: absolute; top: 10px; left: 10px; font-size: 12px; font-weight: bold; z-index: 10;">Rupture de Stock</span>`;
+                btnDisabledAttr = "disabled";
+                btnText = "Rupture de Stock";
+                btnStyle = "background-color: #bdc3c7; cursor: not-allowed; color: #fff; box-shadow: none;";
+            }
+
             // Création de bouton si la marque n'existe pas encore
             if (produit.marque && filterContainer) {
                 const marqueLower = produit.marque.toLowerCase().trim();
@@ -52,9 +68,9 @@ async function chargerProduits() {
             }
 
             // On recrée EXACTEMENT ta structure HTML, mais avec les données de Firebase.
-            // J'ai ajouté un petit texte "Nouveau" pour que tu le reconnaisses par rapport aux tiens.
             const carteHTML = `
-                <div class="product-card">
+                <div class="product-card" style="position: relative;">
+                    ${badgeHtml}
                     <div class="product-image">
                         <img src="${produit.image}" alt="${produit.nom}">
                     </div>
@@ -65,14 +81,14 @@ async function chargerProduits() {
                         <div class="price">
                             <span class="new-price">${produit.prix} FCFA</span>
                         </div>
-                        <button class="product-btn add-to-cart-btn" data-nom="${produit.nom}" data-marque="${produit.marque}" data-prix="${produit.prix}" data-image="${produit.image}">
-                            <i class='bx bx-cart-add'></i> Ajouter au panier
+                        <button class="product-btn add-to-cart-btn" style="${btnStyle}" ${btnDisabledAttr} data-nom="${produit.nom}" data-marque="${produit.marque}" data-prix="${produit.prix}" data-image="${produit.image}">
+                            ${btnText}
                         </button>
                     </div>
                 </div>
             `;
 
-            // Ajoute cette nouvelle carte à la fin de tes propres cartes HTML (insertAdjacentHTML ne supprime rien !)
+            // Ajoute cette nouvelle carte à la fin de tes propres cartes HTML
             conteneurHTML.insertAdjacentHTML('beforeend', carteHTML);
         });
 

@@ -57,12 +57,18 @@ async function chargerProduits() {
             data.id = docSnap.id; // L'identifiant Firestore
             currentProducts.push(data);
             
+            // Format status for table
+            let statutText = "<span style='color: #2ecc71'>🟢 En Stock</span>";
+            if (data.status === "epuise") statutText = "<span style='color: #e74c3c'>🔴 Épuisé</span>";
+            if (data.status === "masque") statutText = "<span style='color: gray'>👁️‍🗨️ Masqué</span>";
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><img src="${data.image}" alt="${data.nom}"></td>
                 <td>${data.nom} <br><small style="color:gray;">${data.categorie || 'Non spécifié'}</small></td>
                 <td><span style="background:#ecf0f1; border-radius:5px; padding:3px 8px; font-size:12px;">${data.marque}</span></td>
                 <td><b>${data.prix} FCFA</b></td>
+                <td>${statutText}</td>
                 <td>
                     <button class="btn-edit" onclick="editerProduit('${data.id}')" title="Modifier"><i class='bx bx-edit'></i></button>
                     <button class="btn-delete" onclick="supprimerProduit('${data.id}')" title="Supprimer"><i class='bx bx-trash'></i></button>
@@ -251,6 +257,7 @@ window.editerProduit = function(id) {
     document.getElementById('product-name').value = produit.nom;
     document.getElementById('product-brand').value = produit.marque;
     document.getElementById('product-category').value = produit.categorie || "";
+    document.getElementById('product-status').value = produit.status || "en_stock";
     document.getElementById('product-price').value = parseInt(produit.prix) || produit.prix;
     
     document.getElementById('existing-image-url').value = produit.image;
@@ -296,6 +303,7 @@ form.addEventListener('submit', async (e) => {
     const nom = sanitizeHTML(document.getElementById('product-name').value);
     const marque = sanitizeHTML(document.getElementById('product-brand').value);
     const categorie = sanitizeHTML(document.getElementById('product-category').value);
+    const status = sanitizeHTML(document.getElementById('product-status').value);
     const prix = document.getElementById('product-price').value;
     const imageFile = document.getElementById('product-image-file').files[0];
     const existingImageUrl = document.getElementById('existing-image-url').value;
@@ -327,6 +335,7 @@ form.addEventListener('submit', async (e) => {
             nom: nom,
             marque: marque,
             categorie: categorie,
+            status: status,
             prix: parseInt(prix), // S'assure de stocker le prix comme un nombre et non du texte
             image: imageUrl
         };

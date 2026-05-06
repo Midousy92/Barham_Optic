@@ -13,7 +13,7 @@ Mes remerciements s'adressent également à l'équipe de Barham Optic pour m'avo
 
 # RÉSUMÉ
 
-L'intégration du numérique est aujourd'hui une nécessité stratégique pour toute entreprise, y compris dans le secteur de la santé visuelle. Ce mémoire retrace la conception et le développement d'une application web pour « Barham Optic », un cabinet d'optique traditionnel. Afin de pallier les limites de la gestion manuelle (engorgement des rendez-vous, visibilité réduite du catalogue), nous avons développé une plateforme web interactive. En nous appuyant sur les technologies HTML/CSS/JavaScript pour le Front-end et Google Firebase (BaaS) pour le Back-end, le système propose un catalogue dynamique avec filtres multicritères, un module de prise de rendez-vous avec gestion des quotas, et un tunnel de commande innovant via l'API WhatsApp. Ce projet démontre l'impact positif de la digitalisation sur la relation client et l'optimisation administrative d'une PME.
+L'intégration du numérique est aujourd'hui une nécessité stratégique pour toute entreprise, y compris dans le secteur de la santé visuelle. Ce mémoire retrace la conception et le développement d'une application web pour « Barham Optic », un cabinet d'optique traditionnel. Afin de pallier les limites de la gestion manuelle (engorgement des rendez-vous, visibilité réduite du catalogue), nous avons développé une plateforme web interactive. En nous appuyant sur les technologies HTML/CSS/JavaScript pour le Front-end et Google Firebase (BaaS) pour le Back-end, le système propose un catalogue dynamique avec filtres multicritères, un module de prise de rendez-vous avec gestion des quotas, un tunnel de commande innovant via l'API WhatsApp, ainsi qu'un outil CRM complet (Espace Médecin) gérant les dossiers patients avec identifiants courts et générant dynamiquement des ordonnances imprimables. Ce projet démontre l'impact positif de la digitalisation sur la relation client et l'optimisation administrative d'une PME.
 
 ---
 
@@ -156,6 +156,7 @@ Le fonctionnement de Barham Optic reposait jusqu'à présent sur un modèle manu
 *   Automatiser la prise de rendez-vous avec des quotas journaliers.
 *   Intégrer un système de commande fluide via l'API WhatsApp.
 *   Développer un espace d'administration (Dashboard) pour la gestion autonome des stocks.
+*   Déployer un CRM Médical (Dossier Patient) permettant le suivi clinique, l'attribution d'identifiants courts et la génération d'ordonnances imprimables A4.
 
 ### 3. Hypothèses de recherche
 *   **Hypothèse 1 :** La mise en place d'un catalogue digital interactif augmentera la visibilité des produits et stimulera le désir d'achat des clients distants.
@@ -299,9 +300,11 @@ Plutôt que des tables SQL ou des modèles Django classiques, le système NoSQL 
 classDiagram
     class Utilisateur {
         +String UID
+        +String shortId
         +String nomComplet
         +String email
         +String telephone
+        +Object dossierMedical
         +String role
         +Date dateCreation
     }
@@ -349,6 +352,7 @@ Des tests unitaires manuels ont été menés :
 ### 1. Présentation des modules développés
 *   **La Vitrine Interactive :** Les pages Collections et Verres intègrent des filtres rapides (Homme/Femme) et des démonstrateurs visuels innovants (simulation avant/après des traitements de verres via CSS).
 *   **Le Module de Rendez-vous :** Interface épurée permettant au patient connecté de bloquer un créneau horaire en 3 clics.
+*   **Le CRM Patient & Ordonnances :** Un espace "Médecin" dédié pour renseigner un dossier médical structuré (11 sections). Le système génère automatiquement un N° de dossier court (recherche instantanée) et produit des ordonnances A4 imprimables, accessibles également depuis le profil du patient.
 
 **Figure 4 : Diagramme d'activité du processus de prise de rendez-vous en ligne**
 ```mermaid
