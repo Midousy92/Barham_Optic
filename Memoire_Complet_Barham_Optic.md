@@ -329,7 +329,9 @@ classDiagram
     Utilisateur "1" o-- "1" DossierMedical : possède
     DossierMedical "1" *-- "0..*" Ordonnance : contient
     Utilisateur "1" o-- "0..*" RendezVous : effectue
+    Utilisateur "1" o-- "0..*" Commande : passe
     Administrateur "1" o-- "0..*" Produit : gère
+    Administrateur "1" o-- "0..*" Commande : valide
     Utilisateur <|-- Administrateur : hérite
 ```
 
