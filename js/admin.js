@@ -272,6 +272,7 @@ async function chargerCommandes() {
             let textColor = "#fff";
             if (data.status === "Validée") { badgeBg = "#2ecc71"; textColor = "#fff"; }
             if (data.status === "Livrée") { badgeBg = "#3498db"; textColor = "#fff"; }
+            if (data.status === "Annulée") { badgeBg = "#e74c3c"; textColor = "#fff"; }
 
             const totalPrix = data.articles ? data.articles.reduce((sum, item) => sum + parseInt((item.prix || 0).toString().replace(/\s+/g, '') || 0), 0) : 0;
             

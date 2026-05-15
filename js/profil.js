@@ -337,8 +337,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
                 
                 let statutClass = "status-attente";
+                let styleInline = "";
                 if (achat.status === "Validée") statutClass = "status-confirme";
                 if (achat.status === "Livrée") statutClass = "status-termine";
+                if (achat.status === "Annulée") styleInline = "background-color: #e74c3c; color: white;";
 
                 let articlesHtml = '<ul style="list-style:none; padding:0; margin:10px 0 0 0; font-size:13px; color:#555;">';
                 if (achat.articles && achat.articles.length > 0) {
@@ -350,11 +352,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const totalPrix = achat.articles ? achat.articles.reduce((sum, item) => sum + parseInt(item.prix.toString().replace(/\s+/g, '') || 0), 0) : 0;
 
+                let actionHtml = "";
+                if (achat.status === "En attente" || !achat.status) {
+                    actionHtml = `<button onclick="annulerCommande('${achat.id}')" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; font-size:12px; cursor:pointer;"><i class='bx bx-x'></i> Annuler</button>`;
+                }
+
                 const cardHtml = `
                     <div class="rdv-card" style="border-left: 4px solid #3498db; margin-bottom:15px; background-color: #f8f9fa;">
                         <div class="rdv-card-info" style="width: 100%;">
-                            <h4 style="color:#183153; margin-bottom: 8px;"><i class='bx bx-shopping-bag'></i> Commande du ${dateFormatee}</h4>
-                            <span class="rdv-status ${statutClass}" style="margin-bottom:10px; display:inline-block;">${achat.status || 'En attente'}</span>
+                            <div style="display:flex; justify-content:space-between; align-items:start;">
+                                <div>
+                                    <h4 style="color:#183153; margin-bottom: 8px;"><i class='bx bx-shopping-bag'></i> Commande du ${dateFormatee}</h4>
+                                    <span class="rdv-status ${statutClass}" style="margin-bottom:10px; display:inline-block; ${styleInline}">${achat.status || 'En attente'}</span>
+                                </div>
+                                <div>${actionHtml}</div>
+                            </div>
                             ${articlesHtml}
                             <p style="text-align:right; font-weight:bold; color:#183153; margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
                                 Total : ${totalPrix} FCFA
@@ -370,6 +382,20 @@ document.addEventListener("DOMContentLoaded", () => {
             achatsList.innerHTML = `<p style="text-align:center; color:#e74c3c; font-size:14px; padding: 10px;">Impossible de charger l'historique des achats.</p>`;
         }
     }
+
+    // Fonction globale pour annuler une commande
+    window.annulerCommande = async function(id) {
+        if (confirm("Êtes-vous sûr de vouloir annuler cette commande ?")) {
+            try {
+                await updateDoc(doc(db, "commandes", id), { status: "Annulée" });
+                alert("Votre commande a été annulée avec succès.");
+                chargerHistoriqueAchats(); // Recharger l'affichage
+            } catch (error) {
+                console.error("Erreur d'annulation :", error);
+                alert("Impossible d'annuler la commande. Vérifiez votre connexion.");
+            }
+        }
+    };
     // -----------------------------------------------------------------
     // GESTION IMPRESSION ORDONNANCE (PATIENT)
     // -----------------------------------------------------------------
