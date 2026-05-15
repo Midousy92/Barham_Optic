@@ -326,6 +326,12 @@ classDiagram
         +String statut
     }
 
+    class Administrateur {
+        +gererCatalogue()
+        +validerCommande()
+        +gererRendezVous()
+    }
+
     Utilisateur "1" o-- "1" DossierMedical : possède
     DossierMedical "1" *-- "0..*" Ordonnance : contient
     Utilisateur "1" o-- "0..*" RendezVous : effectue
@@ -336,9 +342,9 @@ classDiagram
 ```
 
 *Analyse de la structure des entités :*
-Les objets manipulés par le système convergent vers la liaison naturelle entre le catalogue et la planification. Avec le NoSQL (Firebase), l'association "0..*" entre `Utilisateur` et `RendezVous` signifie qu'à l'implémentation, chaque objet *Rendez-vous* possèdera un attribut référençant l'UID (User ID) unique Firebase du client. 
+Les objets manipulés par le système convergent vers la liaison naturelle entre le catalogue e-commerce et la planification médicale. Avec le NoSQL (Firebase), l'association "0..*" entre `Utilisateur` et `RendezVous`, ainsi qu'avec `Commande`, signifie qu'à l'implémentation, chaque objet *Rendez-vous* ou *Commande* possèdera un attribut référençant l'UID (User ID) unique Firebase du client. L'entité `Administrateur` hérite des attributs d'un utilisateur standard tout en ayant des méthodes étendues pour la validation des processus.
 
-Par cette modélisation, le système assure un maillage robuste de l'information permettant d'enrichir le profil historique (« Espace Profil ») du patient sans dupliquer inutilement des données sensibles.
+Par cette modélisation, le système assure un maillage robuste de l'information permettant d'enrichir le profil historique (« Espace Profil ») du patient avec ses achats et visites, sans dupliquer inutilement des données sensibles.
 
 ---
 
