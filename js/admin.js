@@ -287,9 +287,9 @@ async function chargerCommandes() {
                 <td><small style="color:gray;">ID Patient :</small><br> ${data.userId ? data.userId.substring(0, 8) : "Invité"}</td>
                 <td>${articlesHtml}<b>Total: ${totalPrix} FCFA</b></td>
                 <td><span style="background:${badgeBg}; color:${textColor}; padding:4px 8px; border-radius:12px; font-size:12px;">${data.status || 'En attente'}</span></td>
-                <td style="display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center;">
-                    <button class="rdv-action-btn confirm-btn" style="background:#2ecc71; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="changerStatutCommande('${data.id}', 'Validée')" title="Valider">Valider</button>
-                    <button class="rdv-action-btn confirm-btn" style="background:#3498db; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="changerStatutCommande('${data.id}', 'Livrée')" title="Livrer">Livrée</button>
+                <td style="display: flex; flex-direction: row; gap: 8px; align-items: center; justify-content: center; height: 100%;">
+                    <button class="btn-edit" style="background:#2ecc71; color:white; border:none; padding:8px; border-radius:5px; cursor:pointer; font-size:16px;" onclick="changerStatutCommande('${data.id}', 'Validée')" title="Valider la commande"><i class='bx bx-check-double'></i></button>
+                    <button class="btn-edit" style="background:#3498db; color:white; border:none; padding:8px; border-radius:5px; cursor:pointer; font-size:16px;" onclick="changerStatutCommande('${data.id}', 'Livrée')" title="Marquer comme Livrée"><i class='bx bx-package'></i></button>
                 </td>
             `;
             commandesTableBody.appendChild(tr);
