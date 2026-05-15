@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 chargerHistoriqueAchats(); // Recharger l'affichage
             } catch (error) {
                 console.error("Erreur d'annulation :", error);
-                alert("Impossible d'annuler la commande. Vérifiez votre connexion.");
+                alert("Impossible d'annuler : " + error.message);
             }
         }
     };
