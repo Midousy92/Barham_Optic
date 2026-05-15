@@ -320,7 +320,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const achats = [];
             querySnapshot.forEach((docSnap) => {
-                achats.push(docSnap.data());
+                const data = docSnap.data();
+                data.id = docSnap.id;
+                achats.push(data);
             });
 
             // Tri chronologique : du plus récent au plus ancien
