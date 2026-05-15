@@ -296,7 +296,7 @@ async function chargerCommandes() {
         });
     } catch (error) {
         console.error("Erreur Commandes:", error);
-        commandesTableBody.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'>Erreur de chargement.</td></tr>`;
+        commandesTableBody.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'><b>Erreur exacte :</b> ${error.message}</td></tr>`;
     }
 }
 
