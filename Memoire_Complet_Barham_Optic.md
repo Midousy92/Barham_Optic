@@ -164,10 +164,11 @@ flowchart LR
         uc3([Simulateur Avant/Après])
         uc4([S'inscrire / Se connecter])
         uc5([Prendre un rendez-vous])
-        uc6([Passer commande WhatsApp])
+        uc6([Commander (WhatsApp & Historique)])
         uc7([Gérer le catalogue CRUD])
         uc8([Gérer RDV et Dossiers Médicaux])
         uc9([Générer / Imprimer Ordonnances])
+        uc10([Gérer / Valider les Commandes])
     end
     
     Client --> uc1
@@ -186,6 +187,7 @@ flowchart LR
     Admin --> uc7
     Admin --> uc8
     Admin --> uc9
+    Admin --> uc10
 ```
 
 ### Descriptions textuelles des Cas d'Utilisation majeurs :
@@ -234,6 +236,7 @@ sequenceDiagram
     
     Client->>InterfaceUI: Clique "Commander" (Monture X)
     InterfaceUI->>InterfaceUI: Extraction Nom & Prix du produit
+    InterfaceUI->>ServeurFB: Enregistrement Asynchrone de la Commande (Statut: En attente)
     InterfaceUI->>InterfaceUI: Création et Encodage URL (wa.me/...)
     InterfaceUI->>WhatsApp: Redirection vers l'application WhatsApp
     WhatsApp-->>Client: Ouverture de la conversation
@@ -294,6 +297,15 @@ classDiagram
         +Date dateEmission
         +String contenuCorrection
         +String nomMedecin
+    }
+    
+    class Commande {
+        +String ID_Commande
+        +String userId
+        +Array articles
+        +Number prixTotal
+        +String status
+        +Date dateCreation
     }
     
     class Produit {
@@ -447,28 +459,28 @@ Au chargement de la page `collections.html`, un script asynchrone est exécuté 
 L'une des grandes réussites de l'application est l'incorporation d'une barre de recherche multicritères et de filtres avancés. Pour éviter de multiplier les requêtes incessantes vers le serveur Google (qui engendreraient des coûts et des lenteurs), l'ensemble du catalogue est chargé une fois en mémoire côté client.
 Lorsqu'un utilisateur tape le nom d’une marque ou sélectionne une fourchette de prix, un *Listener* JavaScript détecte le changement d’état et applique immédiatement une méthode `.filter()` sur le tableau des produits en mémoire, masquant (via la propriété CSS `display: none`) instantanément les articles non pertinents sans rechargement de la page.
 
-### 4.2.3 Module de Commande via l'API WhatsApp
-Lorsqu'un visiteur souhaite acquérir une paire de lunettes repérée dans le catalogue, il clique sur le bouton de commande. Ce clic déclenche une fonction JavaScript spécifique qui va :
-1. Extraire le libellé complet du produit et son prix formaté.
-2. Formater un texte personnalisé en encodant les caractères spéciaux (URL Encoding).
-3. Rediriger l'utilisateur vers son application tierce.
+### 4.2.3 Le Module E-commerce : Du Panier à l'Historique d'Achats
+Lorsqu'un visiteur souhaite acquérir une sélection de lunettes repérées dans le catalogue, il clique sur le bouton de commande de son panier. Afin d'assurer un suivi commercial rigoureux tout en maintenant une proximité relationnelle, le système orchestre un processus en deux étapes asynchrones :
+1. **Sauvegarde en Base de Données (Historique) :** Avant de quitter le site, le script vérifie l'authentification de l'utilisateur. S'il est connecté à son "Espace Personnel", le contenu du panier est sauvegardé de manière asynchrone dans une collection Firestore dédiée (`commandes`) avec le statut initial *"En attente"*. Cela permet au client de retrouver l'intégralité de son historique d'achats, le détail des lunettes et le montant total dépensé, directement sur son profil.
+2. **Redirection API WhatsApp :** Le système formate ensuite un texte personnalisé reprenant le listing de la commande (URL Encoding), puis redirige l'utilisateur vers la messagerie WhatsApp de l'opticien pour finaliser l'échange.
 
-**Exemple conceptuel du fonctionnement de la génération du lien :**
+**Exemple conceptuel du fonctionnement couplé (Firestore + WhatsApp) :**
 ```javascript
-// Fonction déclenchée lors du clic sur le bouton de commande
-function commanderViaWhatsApp(nomProduit, prix) {
-    const numeroOpticien = "22177XXXXXXX"; // Numéro professionnel
-    const message = "Bonjour Barham Optic, je souhaite commander : " 
-                    + nomProduit + " au prix de " + prix + " CFA.";
-                    
-    // Encodage URI pour garantir la compatibilité web
-    const urlWhatsApp = `https://wa.me/${numeroOpticien}?text=${encodeURIComponent(message)}`;
-    
-    // Ouverture de la messagerie dans un nouvel onglet
-    window.open(urlWhatsApp, '_blank');
+// 1. Sauvegarde asynchrone de la commande pour l'historique du profil
+if (user) {
+    await addDoc(collection(db, "commandes"), {
+        userId: user.uid,
+        date: serverTimestamp(),
+        articles: cart,
+        status: "En attente"
+    });
 }
+// 2. Redirection vers WhatsApp pour discussion directe avec l'opticien
+const message = "Bonjour Barham Optic, je souhaite commander : ...";
+const urlWhatsApp = `https://wa.me/${numeroOpticien}?text=${encodeURIComponent(message)}`;
+window.open(urlWhatsApp, '_blank');
 ```
-Ce pont technique simple mais robuste évite le développement complexe et lourd d'une passerelle de paiement classique tout en sécurisant la transaction finale oralement avec le professionnel de santé.
+Ce pont technique complexe mais invisible pour l'utilisateur permet de palier l'absence de passerelle de paiement bancaire, tout en offrant une expérience de suivi de commandes digne d'un grand site e-commerce traditionnel.
 
 ## 4.3 Le Module de Prise de Rendez-Vous
 
@@ -496,6 +508,7 @@ L’indépendance du gérant face aux informaticiens a été assurée par la cr�
 Ce tableau de bord se distingue par son approche **CRUD (Create, Read, Update, Delete)** intuitive :
 *   **Create (Créer) & Update (Modifier)** : Un formulaire interactif permet de renseigner les caractéristiques (Prix, Catégorie, Marque, Statut) et d'ajouter une image. Le script compresse cette image en direct (Base64) et met à jour Firestore instantanément.
 *   **Gestion des Stocks & Disponibilité (Soft Delete)** : Plutôt qu'une suppression brute, l'administrateur gère un *Statut de Disponibilité* (En stock, Rupture de stock, Masqué). Un produit en "Rupture de stock" reste visible dans le catalogue public avec un badge rouge "Rupture de Stock" (créant un sentiment de rareté), tandis qu'un produit "Masqué" disparaît de la vitrine sans être effacé de la base de données. Le formulaire d'administration a été ajusté pour intégrer ce sélecteur de disponibilité.
+*   **Suivi des Commandes E-commerce** : En complément du catalogue, un onglet dynamique permet au gérant de visualiser en temps réel l'ensemble des paniers validés par les clients. Par de simples boutons, l'administrateur peut modifier le statut de la commande de *"En attente"* à *"Validée"* puis *"Livrée"*. Ces changements d'états se répercutent instantanément sur le profil personnel du client.
 *   **Gestion des Rendez-Vous (UI/UX Optimisée)** : L'interface permet le suivi infaillible des patients grâce à un tableau chronologique. Suite à une refonte complète du design, les actions (Confirmer, Annuler, etc.) sont présentées sous forme de boutons d'action ergonomiques et modernes, facilitant l'interaction rapide par l'administrateur.
 
 > *(Conseil : Insérer ici une belle capture globale du dashboard administrateur en insistant sur le tableau des produits avec les statuts et le tableau de réservation)*

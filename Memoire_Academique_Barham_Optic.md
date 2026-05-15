@@ -260,9 +260,11 @@ flowchart LR
         uc3([Simulateur Avant/Après])
         uc4([S'inscrire / Se connecter])
         uc5([Prendre un rendez-vous])
-        uc6([Passer commande WhatsApp])
+        uc6([Commander (WhatsApp & Historique)])
         uc7([Gérer le catalogue CRUD])
-        uc8([Visualiser les rendez-vous])
+        uc8([Gérer RDV et Dossiers Médicaux])
+        uc9([Générer / Imprimer Ordonnances])
+        uc10([Gérer / Valider les Commandes])
     end
     
     Client --> uc1
@@ -271,13 +273,17 @@ flowchart LR
     Client --> uc4
     Client --> uc5
     Client --> uc6
+    Client --> uc9
     
     uc5 -. "<<include>>" .-> uc4
     uc6 -. "<<extend>>" .-> uc4
+    uc9 -. "<<include>>" .-> uc4
     
     Admin --> uc4
     Admin --> uc7
     Admin --> uc8
+    Admin --> uc9
+    Admin --> uc10
 ```
 
 ---
@@ -318,6 +324,22 @@ classDiagram
         +String imageBase64
         +Boolean isNouveau
         +String status
+    }
+    
+    class Ordonnance {
+        +String ID_Ordonnance
+        +Date dateEmission
+        +String contenuCorrection
+        +String nomMedecin
+    }
+    
+    class Commande {
+        +String ID_Commande
+        +String userId
+        +Array articles
+        +Number prixTotal
+        +String status
+        +Date dateCreation
     }
     
     class RendezVous {
@@ -420,6 +442,7 @@ sequenceDiagram
     
     Client->>InterfaceUI: Clique "Commander" (Monture X)
     InterfaceUI->>InterfaceUI: Extraction Nom & Prix du produit
+    InterfaceUI->>ServeurFB: Enregistrement Asynchrone de la Commande (Statut: En attente)
     InterfaceUI->>InterfaceUI: Création et Encodage URL (wa.me/...)
     InterfaceUI->>WhatsApp: Redirection vers l'application WhatsApp
     WhatsApp-->>Client: Ouverture de la conversation

@@ -185,9 +185,20 @@ classDiagram
         +String statut
         +String fk_utilisateur_UID
     }
+    
+    class Commande {
+        +String ID_Commande
+        +String userId
+        +Array articles
+        +Number prixTotal
+        +String status
+        +Date dateCreation
+    }
 
     Utilisateur "1" o--  "0..*" RendezVous : réserve
+    Utilisateur "1" o--  "0..*" Commande : effectue
     Administrateur "1" o-- "0..*" Produit : gère
+    Administrateur "1" o-- "0..*" Commande : valide
     Utilisateur <|-- Administrateur : hérite
 ```
 
