@@ -190,9 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
         
         message += "%0AMerci de m'informer de leur disponibilité.";
 
-        // Redirection vers WhatsApp
+        // Redirection vers WhatsApp (contournement des bloqueurs de popup mobile)
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-        window.open(url, "_blank");
+        window.location.href = url;
 
         // Vider le panier après commande
         cart = [];
