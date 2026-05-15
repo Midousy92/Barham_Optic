@@ -249,20 +249,31 @@ async function chargerCommandes() {
 
         // Tri chronologique : plus récentes en haut
         commandes.sort((a, b) => {
-            const dateA = a.date ? a.date.toDate() : new Date(0);
-            const dateB = b.date ? b.date.toDate() : new Date(0);
+            let dateA = new Date(0);
+            if (a.date) dateA = typeof a.date.toDate === 'function' ? a.date.toDate() : new Date(a.date);
+            
+            let dateB = new Date(0);
+            if (b.date) dateB = typeof b.date.toDate === 'function' ? b.date.toDate() : new Date(b.date);
+            
             return dateB - dateA;
         });
 
         commandes.forEach((data) => {
-            const dateStr = data.date ? data.date.toDate().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' }) : "-";
+            let dateStr = "-";
+            if (data.date) {
+                if (typeof data.date.toDate === 'function') {
+                    dateStr = data.date.toDate().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' });
+                } else {
+                    dateStr = new Date(data.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' });
+                }
+            }
             
             let badgeBg = "#f39c12"; // Orange (En attente)
             let textColor = "#fff";
             if (data.status === "Validée") { badgeBg = "#2ecc71"; textColor = "#fff"; }
             if (data.status === "Livrée") { badgeBg = "#3498db"; textColor = "#fff"; }
 
-            const totalPrix = data.articles ? data.articles.reduce((sum, item) => sum + parseInt(item.prix.toString().replace(/\\s+/g, '') || 0), 0) : 0;
+            const totalPrix = data.articles ? data.articles.reduce((sum, item) => sum + parseInt((item.prix || 0).toString().replace(/\s+/g, '') || 0), 0) : 0;
             
             let articlesHtml = "<ul style='padding-left:15px; font-size:12px; margin:0;'>";
             if (data.articles) {
