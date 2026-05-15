@@ -348,26 +348,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 articlesHtml += '</ul>';
 
-                const totalPrix = achat.articles ? achat.articles.reduce((sum, item) => sum + parseInt(item.prix.toString().replace(/\\s+/g, '') || 0), 0) : 0;
+                const totalPrix = achat.articles ? achat.articles.reduce((sum, item) => sum + parseInt(item.prix.toString().replace(/\s+/g, '') || 0), 0) : 0;
 
-                const cardHtml = \`
+                const cardHtml = `
                     <div class="rdv-card" style="border-left: 4px solid #3498db; margin-bottom:15px; background-color: #f8f9fa;">
                         <div class="rdv-card-info" style="width: 100%;">
-                            <h4 style="color:#183153; margin-bottom: 8px;"><i class='bx bx-shopping-bag'></i> Commande du \${dateFormatee}</h4>
-                            <span class="rdv-status \${statutClass}" style="margin-bottom:10px; display:inline-block;">\${achat.status || 'En attente'}</span>
-                            \${articlesHtml}
+                            <h4 style="color:#183153; margin-bottom: 8px;"><i class='bx bx-shopping-bag'></i> Commande du ${dateFormatee}</h4>
+                            <span class="rdv-status ${statutClass}" style="margin-bottom:10px; display:inline-block;">${achat.status || 'En attente'}</span>
+                            ${articlesHtml}
                             <p style="text-align:right; font-weight:bold; color:#183153; margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
-                                Total : \${totalPrix} FCFA
+                                Total : ${totalPrix} FCFA
                             </p>
                         </div>
                     </div>
-                \`;
+                `;
                 achatsList.insertAdjacentHTML('beforeend', cardHtml);
             });
 
         } catch (error) {
             console.error("Erreur chargement achats :", error);
-            achatsList.innerHTML = \`<p style="text-align:center; color:#e74c3c; font-size:14px; padding: 10px;">Impossible de charger l'historique des achats.</p>\`;
+            achatsList.innerHTML = `<p style="text-align:center; color:#e74c3c; font-size:14px; padding: 10px;">Impossible de charger l'historique des achats.</p>`;
         }
     }
     // -----------------------------------------------------------------
