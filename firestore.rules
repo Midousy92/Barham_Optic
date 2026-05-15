@@ -2,9 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Fonction pour vérifier si l'utilisateur est l'administrateur
+    // Fonction pour vérifier si l'utilisateur est l'administrateur principal
     function isAdmin() {
       return request.auth != null && request.auth.token.email == "barhamoptic70@gmail.com";
+    }
+
+    // Fonction pour vérifier si l'utilisateur est le médecin
+    function isMedecin() {
+      return request.auth != null && request.auth.token.email == "skhamidou03@gmail.com";
     }
 
     // Collection Produits : Tout le monde peut lire, SEUL l'admin peut modifier/créer/supprimer
@@ -18,19 +23,18 @@ service cloud.firestore {
     // - Les utilisateurs normaux peuvent créer un rdv, mais pas les lire ni les modifier
     match /rendezvous/{rdvId} {
       allow create: if true; 
-      // Tout le monde peut lire pour vérifier les disponibilités, 
-      // mais l'utilisateur ne peut supprimer que ses propres rdv (et l'admin a tous les droits)
+      // Tout le monde peut lire pour vérifier les disponibilités
       allow read: if true;
-      allow delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
-      allow update: if isAdmin();
+      allow delete: if isAdmin() || isMedecin() || (request.auth != null && request.auth.uid == resource.data.userId);
+      allow update: if isAdmin() || isMedecin();
     }
     
     // Collection Utilisateurs : Protection absolue du CRM Patient
     match /utilisateurs/{userId} {
       allow create: if request.auth != null && request.auth.uid == userId;
-      allow read, update: if request.auth != null && request.auth.uid == userId;
+      allow read, update: if request.auth != null && request.auth.uid == userId || isAdmin() || isMedecin();
       // Seul le médecin/admin peut supprimer un dossier patient
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || isMedecin();
     }
 
     // Collection Commandes : Historique d'achats
