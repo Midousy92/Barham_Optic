@@ -143,13 +143,45 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('barham_cart', JSON.stringify(cart));
     }
 
-    // 7. Validation et envois sur WhatsApp
-    document.getElementById("send-whatsapp-btn").addEventListener("click", () => {
+    // 7. Validation et envois sur WhatsApp avec sauvegarde Firestore
+    document.getElementById("send-whatsapp-btn").addEventListener("click", async () => {
         if (cart.length === 0) {
             alert("Votre panier est vide !");
             return;
         }
 
+        const initialBtnText = document.getElementById("send-whatsapp-btn").innerHTML;
+        document.getElementById("send-whatsapp-btn").innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Traitement...";
+        document.getElementById("send-whatsapp-btn").disabled = true;
+
+        try {
+            // Importation asynchrone de Firebase pour ne pas bloquer le script cart.js non-module
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js");
+            const { getFirestore, collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js");
+            const { app } = await import("./firebase-init.js");
+            
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const user = auth.currentUser;
+
+            if (user) {
+                // Sauvegarde de la commande dans Firebase si connecté
+                await addDoc(collection(db, "commandes"), {
+                    userId: user.uid,
+                    date: serverTimestamp(),
+                    articles: cart,
+                    totalItems: cart.length,
+                    status: "En attente" // Le statut par défaut
+                });
+                console.log("Commande sauvegardée dans l'historique.");
+            } else {
+                console.log("Utilisateur non connecté. Commande effectuée en tant qu'invité (non sauvegardée).");
+            }
+        } catch (error) {
+            console.error("Erreur lors de la sauvegarde de la commande :", error);
+        }
+
+        // Préparation du message WhatsApp
         let message = "Bonjour Barham Optic, je souhaite commander les articles de ma sélection :%0A%0A";
         
         cart.forEach((p, i) => {
@@ -158,14 +190,18 @@ document.addEventListener("DOMContentLoaded", () => {
         
         message += "%0AMerci de m'informer de leur disponibilité.";
 
+        // Redirection vers WhatsApp
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
         window.open(url, "_blank");
-        
-        // Optionnel : Vider le panier après commande si on le souhaite
-        // cart = [];
-        // sauvegarderPanier();
-        // updateCartUI();
-        // toggleCart();
+
+        // Vider le panier après commande
+        cart = [];
+        sauvegarderPanier();
+        updateCartUI();
+        toggleCart();
+
+        document.getElementById("send-whatsapp-btn").innerHTML = initialBtnText;
+        document.getElementById("send-whatsapp-btn").disabled = false;
     });
 
     // Premier rendu au chargement

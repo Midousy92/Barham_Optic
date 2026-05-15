@@ -93,10 +93,11 @@ Les besoins fonctionnels décrivent avec précision ce que le système (l'applic
     *   Le système doit instaurer des garde-fous limitant le nombre de rendez-vous quotidiens (par exemple, pas plus de 10 rendez-vous par jour) afin de ne pas surcharger l'opticien.
 4.  **Espace Profil et Authentification (Client) :**
     *   Les utilisateurs devront pouvoir créer un compte, se connecter et se déconnecter de manière sécurisée.
-    *   Le client doit pouvoir avoir accès à son profil et l'historique de ses rendez-vous passés et futurs.
-5.  **Administration centralisée (Dashboard Admin) :**
-    *   Un espace réservé (Dashboard) doit exister pour l'administrateur du site.
-    *   L'administrateur doit posséder les droits de création, de lecture, de modification et de suppression (CRUD) sur le catalogue des produits (ajouter une nouvelle paire de lunettes, modifier son prix ou son image).
+    *   Le client doit pouvoir accéder à son "Espace Personnel" pour consulter l'historique de ses rendez-vous, mais aussi pour visualiser et imprimer ses ordonnances optiques de n'importe où.
+5.  **Administration centralisée et CRM Médical (Dashboard Admin/Médecin) :**
+    *   Un espace réservé (Dashboard) doit exister pour la gestion complète de la boutique et du cabinet.
+    *   **Volet Boutique :** L'administrateur doit posséder les droits de création, de lecture, de modification et de suppression (CRUD) sur le catalogue et gérer la disponibilité des stocks (En stock, Rupture, Masqué).
+    *   **Volet Clinique :** Le médecin doit disposer d'un annuaire des patients (recherche par ID court), pouvoir éditer des dossiers médicaux complets et générer dynamiquement des ordonnances imprimables.
 
 ### 1.4.2 Besoins non-fonctionnels
 Les besoins non-fonctionnels concernent les contraintes techniques, de performance et d'ergonomie qui qualifient le fonctionnement du système.
@@ -165,7 +166,8 @@ flowchart LR
         uc5([Prendre un rendez-vous])
         uc6([Passer commande WhatsApp])
         uc7([Gérer le catalogue CRUD])
-        uc8([Visualiser les rendez-vous])
+        uc8([Gérer RDV et Dossiers Médicaux])
+        uc9([Générer / Imprimer Ordonnances])
     end
     
     Client --> uc1
@@ -174,13 +176,16 @@ flowchart LR
     Client --> uc4
     Client --> uc5
     Client --> uc6
+    Client --> uc9
     
     uc5 -. "<<include>>" .-> uc4
     uc6 -. "<<extend>>" .-> uc4
+    uc9 -. "<<include>>" .-> uc4
     
     Admin --> uc4
     Admin --> uc7
     Admin --> uc8
+    Admin --> uc9
 ```
 
 ### Descriptions textuelles des Cas d'Utilisation majeurs :
@@ -194,7 +199,7 @@ Afin de ne laisser aucune place à l'ambiguïté, chaque cas d'utilisation majeu
     1. Le client navigue vers la page "Prendre un rendez-vous" (rendezvous.html).
     2. Le système présente le formulaire avec le choix du motif de la visite et un sélecteur de date.
     3. Le client sélectionne sa date, son heure, et soumet la demande.
-    4. Le système (lié à Firebase) vérifie la contrainte stricte des limites de rendez-vous (ex: max 10/jour).
+    4. Le système (lié à Firebase) vérifie la contrainte stricte des limites de rendez-vous (ex: max 2/heure).
     5. Si la limite n'est pas atteinte, le rendez-vous est enregistré, et une notification de validation apparait.
 *   **Post-condition :** La base de données héberge le nouveau créneau réservé, rattaché à l'UID du client.
 
@@ -273,9 +278,22 @@ classDiagram
         +String nomComplet
         +String email
         +String telephone
-        +Object dossierMedical
         +String role
         +Date dateCreation
+    }
+    
+    class DossierMedical {
+        +String ID_Dossier
+        +String antecedents
+        +String correctionsVisions
+        +Date prochainControle
+    }
+
+    class Ordonnance {
+        +String ID_Ordonnance
+        +Date dateEmission
+        +String contenuCorrection
+        +String nomMedecin
     }
     
     class Produit {
@@ -285,7 +303,7 @@ classDiagram
         +String categorie
         +Double prix
         +String imageBase64
-        +Boolean isNouveau
+        +String statutDisponibilite
     }
     
     class RendezVous {
@@ -294,10 +312,11 @@ classDiagram
         +String heureRDV
         +String motif
         +String statut
-        +String fk_utilisateur_UID
     }
 
-    Utilisateur "1" o--  "0..*" RendezVous : effectue
+    Utilisateur "1" o-- "1" DossierMedical : possède
+    DossierMedical "1" *-- "0..*" Ordonnance : contient
+    Utilisateur "1" o-- "0..*" RendezVous : effectue
     Administrateur "1" o-- "0..*" Produit : gère
     Utilisateur <|-- Administrateur : hérite
 ```
@@ -399,7 +418,7 @@ Ce chapitre constitue le cœur technique de notre travail de recherche et de dé
 
 ## 4.1 L'Interface Utilisateur (UI) et l'Expérience Client (UX)
 
-L'aspect visuel de l'application a été pensé pour refléter le professionnalisme clinique d'un opticien, tout en adoptant les codes graphiques du commerce digital haut de gamme (minimalisme, clarté, aération du contenu). 
+L'aspect visuel de l'application a été pensé pour refléter le professionnalisme clinique d'un opticien, tout en adoptant les codes graphiques du commerce digital haut de gamme (minimalisme, clarté, aération du contenu). Une attention particulière a été portée à la **cohérence de la marque**, avec une standardisation des couleurs (notamment l'utilisation systématique de la couleur bleue "Barham Optic" pour les titres de sections comme "Contactez-nous" ou les messages de succès d'authentification). De plus, l'espace utilisateur a été renommé **"Mon Espace Personnel"** pour offrir un ton plus chaleureux et centré sur le patient. 
 
 ### 4.1.1 La page d'Accueil (index.html)
 La page d'accueil est le point d'entrée principal. Elle se décompose en un "Hero Section" imposant, captant l'attention de l'utilisateur dès les premières secondes grâce à une image d'arrière-plan haute définition et un appel à l'action (Call-to-Action) clair l'invitant à découvrir nos collections. La structure de navigation (header) est épurée, et les titres sont scrupuleusement centrés pour assurer un équilibre visuel parfait. De plus, une logique JavaScript dynamique a été implémentée pour détecter automatiquement le dernier produit ajouté dans la base de données et lui apposer un badge "Nouveau" en vitrine, gardant ainsi la page d'accueil toujours vivante et attractive sans intervention manuelle.
@@ -475,37 +494,37 @@ Conscient des besoins spécifiques d'un cabinet d'ophtalmologie ou d'optique, no
 L’indépendance du gérant face aux informaticiens a été assurée par la création de la page privée `admin.html`. Son accès est formellement encadré par des *Security Rules* paramétrées directement sur l'interface cloud Firebase : les requêtes de lecture globale ou de suppression refusent tout accès (erreur 403 Forbidden) dont le token UID (User ID) ne correspond pas à l'adresse administrateur validée.
 
 Ce tableau de bord se distingue par son approche **CRUD (Create, Read, Update, Delete)** intuitive :
-*   **Create (Créer)** : Un formulaire permet de renseigner les caractéristiques textuelles (Prix, Référence, Marque) et d'ajouter une image via un champ de téléversement natif (`<input type="file">`). Le script compresse cette image en direct (Base64) et fusionne le tout pour composer le document JSON de l'objet global, injecté et hébergé gratuitement au sein de *Firestore*.
-*   **Read (Lire)** : L'historique complet des clients et la liste des rendez-vous des prochains jours s'affichent sous forme de tableaux clairs offrant un suivi infaillible au praticien.
-*   **Delete (Supprimer)** : Un bouton poubelle devant chaque rendez-vous traité ou produit épuisé déclenche la suppression instantanée de l'objet dans la base distante modifiant de facto le catalogue public à la seconde même.
+*   **Create (Créer) & Update (Modifier)** : Un formulaire interactif permet de renseigner les caractéristiques (Prix, Catégorie, Marque, Statut) et d'ajouter une image. Le script compresse cette image en direct (Base64) et met à jour Firestore instantanément.
+*   **Gestion des Stocks & Disponibilité (Soft Delete)** : Plutôt qu'une suppression brute, l'administrateur gère un *Statut de Disponibilité* (En stock, Rupture de stock, Masqué). Un produit en "Rupture de stock" reste visible dans le catalogue public avec un badge rouge "Rupture de Stock" (créant un sentiment de rareté), tandis qu'un produit "Masqué" disparaît de la vitrine sans être effacé de la base de données. Le formulaire d'administration a été ajusté pour intégrer ce sélecteur de disponibilité.
+*   **Gestion des Rendez-Vous (UI/UX Optimisée)** : L'interface permet le suivi infaillible des patients grâce à un tableau chronologique. Suite à une refonte complète du design, les actions (Confirmer, Annuler, etc.) sont présentées sous forme de boutons d'action ergonomiques et modernes, facilitant l'interaction rapide par l'administrateur.
 
-> *(Conseil : Insérer ici une belle capture globale du dashboard administrateur en insistant sur le tableau des produits ou de réservation)*
+> *(Conseil : Insérer ici une belle capture globale du dashboard administrateur en insistant sur le tableau des produits avec les statuts et le tableau de réservation)*
 **Figure 8 : Tableau de bord de l'administration du cabinet Barham Optic.**
 
-**Figure 5 : Diagramme d'activité côté administrateur (Gestion CRUD)**
+**Figure 5 : Diagramme d'activité côté administrateur (Boutique & CRM)**
 ```mermaid
 stateDiagram-v2
-    [*] --> DashboardAdmin: Connexion Admin réussie
+    [*] --> DashboardAdmin: Connexion Admin/Médecin
     
-    DashboardAdmin --> AjouterProduit: Clic sur Ajouter
-    DashboardAdmin --> ModifierProduit: Clic sur Modifier
-    DashboardAdmin --> SupprimerProduit: Clic sur Supprimer
+    state DashboardAdmin {
+        [*] --> GestionCatalogue
+        [*] --> GestionCRM
+    }
     
-    AjouterProduit --> SaisieInfos
-    SaisieInfos --> TeleversementImage
-    TeleversementImage --> CompressionBase64: Via algorithme JS
-    CompressionBase64 --> SauvegardeFirestore
+    GestionCatalogue --> AjouterProduit
+    GestionCatalogue --> ModifierStatutStock
     
-    ModifierProduit --> EditionInfos
-    EditionInfos --> SauvegardeFirestore
+    AjouterProduit --> CompressionBase64Image
+    CompressionBase64Image --> SauvegardeFirestore
+    ModifierStatutStock --> SauvegardeFirestore
     
-    SupprimerProduit --> ConfirmationSuppression
-    ConfirmationSuppression --> SuppressionFirestore
+    GestionCRM --> RecherchePatientIDCourt
+    RecherchePatientIDCourt --> EditionDossierMedical
+    EditionDossierMedical --> GenerationOrdonnance
+    GenerationOrdonnance --> ImpressionPDF
     
-    SauvegardeFirestore --> ActualisationCatalogue
-    SuppressionFirestore --> ActualisationCatalogue
-    
-    ActualisationCatalogue --> DashboardAdmin
+    SauvegardeFirestore --> [*]
+    ImpressionPDF --> [*]
 ```
 
 ---

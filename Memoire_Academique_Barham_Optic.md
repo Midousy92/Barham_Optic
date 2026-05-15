@@ -317,6 +317,7 @@ classDiagram
         +Double prix
         +String imageBase64
         +Boolean isNouveau
+        +String status
     }
     
     class RendezVous {
@@ -373,16 +374,16 @@ stateDiagram-v2
     ConfirmationRDV --> [*]
 ```
 
-*   **Le Dashboard d'Administration :** Espace CRUD (Create, Read, Update, Delete) où le gérant peut ajouter une nouvelle monture avec compression d'image intégrée, et suivre l'agenda.
+*   **Le Dashboard d'Administration :** Espace CRUD (Create, Read, Update, Delete/Status) où le gérant peut ajouter une nouvelle monture avec compression d'image intégrée, gérer l'affichage public grâce au *Statut de disponibilité* (En stock, Rupture, Masqué) et suivre l'agenda avec des boutons d'actions ergonomiques.
 
-**Figure 5 : Diagramme d'activité côté administrateur (Gestion CRUD)**
+**Figure 5 : Diagramme d'activité côté administrateur (Gestion CRUD & Statuts)**
 ```mermaid
 stateDiagram-v2
     [*] --> DashboardAdmin: Connexion Admin réussie
     
     DashboardAdmin --> AjouterProduit: Clic sur Ajouter
     DashboardAdmin --> ModifierProduit: Clic sur Modifier
-    DashboardAdmin --> SupprimerProduit: Clic sur Supprimer
+    DashboardAdmin --> ChangerStatut: Modifier Disponibilité
     
     AjouterProduit --> SaisieInfos
     SaisieInfos --> TeleversementImage
@@ -392,11 +393,11 @@ stateDiagram-v2
     ModifierProduit --> EditionInfos
     EditionInfos --> SauvegardeFirestore
     
-    SupprimerProduit --> ConfirmationSuppression
-    ConfirmationSuppression --> SuppressionFirestore
+    ChangerStatut --> ChoixDispo: (En Stock / Épuisé / Masqué)
+    ChoixDispo --> UpdateFirestoreStatus
     
     SauvegardeFirestore --> ActualisationCatalogue
-    SuppressionFirestore --> ActualisationCatalogue
+    UpdateFirestoreStatus --> ActualisationCatalogue
     
     ActualisationCatalogue --> DashboardAdmin
 ```

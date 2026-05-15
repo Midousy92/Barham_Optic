@@ -25,13 +25,19 @@ service cloud.firestore {
       allow update: if isAdmin();
     }
     
-    // Collection Utilisateurs : Un utilisateur ne peut lire/modifier que son propre profil
+    // Collection Utilisateurs : Protection absolue du CRM Patient
     match /utilisateurs/{userId} {
-      // Création autorisée si on est authentifié et que l'ID correspond
       allow create: if request.auth != null && request.auth.uid == userId;
       allow read, update: if request.auth != null && request.auth.uid == userId;
-      // Seul l'admin peut supprimer un utilisateur de la base
+      // Seul le médecin/admin peut supprimer un dossier patient
       allow delete: if isAdmin();
+    }
+
+    // Collection Commandes : Historique d'achats
+    match /commandes/{commandeId} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+      allow update, delete: if isAdmin();
     }
   }
 }

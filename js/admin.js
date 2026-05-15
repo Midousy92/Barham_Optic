@@ -83,31 +83,51 @@ async function chargerProduits() {
 }
 
 // -------------------------------------------------------------
-// GESTION DES ONGLETS ET RENDEZ-VOUS
+// GESTION DES ONGLETS, RENDEZ-VOUS ET COMMANDES
 // -------------------------------------------------------------
 const tabProduits = document.getElementById('tab-produits');
 const tabRdv = document.getElementById('tab-rdv');
+const tabCommandes = document.getElementById('tab-commandes');
+
 const sectionProduits = document.getElementById('section-produits');
 const sectionRdv = document.getElementById('section-rdv');
+const sectionCommandes = document.getElementById('section-commandes');
+
 const rdvTableBody = document.getElementById('admin-rdv-table');
+const commandesTableBody = document.getElementById('admin-commandes-table');
 
 let currentRendezVous = []; // Garder une trace globale pour gérer l'envoi d'emails
 
+function clearTabs() {
+    tabProduits.classList.remove('active');
+    tabRdv.classList.remove('active');
+    tabCommandes.classList.remove('active');
+    sectionProduits.style.display = 'none';
+    sectionRdv.style.display = 'none';
+    sectionCommandes.style.display = 'none';
+}
+
 tabProduits.addEventListener('click', (e) => {
     e.preventDefault();
+    clearTabs();
     tabProduits.classList.add('active');
-    tabRdv.classList.remove('active');
     sectionProduits.style.display = 'block';
-    sectionRdv.style.display = 'none';
 });
 
 tabRdv.addEventListener('click', (e) => {
     e.preventDefault();
+    clearTabs();
     tabRdv.classList.add('active');
-    tabProduits.classList.remove('active');
     sectionRdv.style.display = 'block';
-    sectionProduits.style.display = 'none';
     chargerRendezVous();
+});
+
+tabCommandes.addEventListener('click', (e) => {
+    e.preventDefault();
+    clearTabs();
+    tabCommandes.classList.add('active');
+    sectionCommandes.style.display = 'block';
+    chargerCommandes();
 });
 
 async function chargerRendezVous() {
@@ -199,6 +219,81 @@ window.changerStatutRdv = async function(id, nouveauStatut) {
             }
 
             chargerRendezVous();
+        } catch (error) {
+            console.error("Erreur:", error);
+            alert("Erreur lors du changement de statut.");
+        }
+    }
+}
+
+// -------------------------------------------------------------
+// GESTION DES COMMANDES (NOUVEAU)
+// -------------------------------------------------------------
+async function chargerCommandes() {
+    commandesTableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Chargement des commandes...</td></tr>";
+    try {
+        const querySnapshot = await getDocs(collection(db, "commandes"));
+        commandesTableBody.innerHTML = "";
+        
+        if (querySnapshot.empty) {
+            commandesTableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Aucune commande en attente.</td></tr>";
+            return;
+        }
+
+        const commandes = [];
+        querySnapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            data.id = docSnap.id;
+            commandes.push(data);
+        });
+
+        // Tri chronologique : plus récentes en haut
+        commandes.sort((a, b) => {
+            const dateA = a.date ? a.date.toDate() : new Date(0);
+            const dateB = b.date ? b.date.toDate() : new Date(0);
+            return dateB - dateA;
+        });
+
+        commandes.forEach((data) => {
+            const dateStr = data.date ? data.date.toDate().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' }) : "-";
+            
+            let badgeBg = "#f39c12"; // Orange (En attente)
+            let textColor = "#fff";
+            if (data.status === "Validée") { badgeBg = "#2ecc71"; textColor = "#fff"; }
+            if (data.status === "Livrée") { badgeBg = "#3498db"; textColor = "#fff"; }
+
+            const totalPrix = data.articles ? data.articles.reduce((sum, item) => sum + parseInt(item.prix.toString().replace(/\\s+/g, '') || 0), 0) : 0;
+            
+            let articlesHtml = "<ul style='padding-left:15px; font-size:12px; margin:0;'>";
+            if (data.articles) {
+                data.articles.forEach(art => { articlesHtml += `<li>${art.nom} (${art.marque})</li>`; });
+            }
+            articlesHtml += "</ul>";
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${dateStr}</b></td>
+                <td><small style="color:gray;">ID Patient :</small><br> ${data.userId ? data.userId.substring(0, 8) : "Invité"}</td>
+                <td>${articlesHtml}<b>Total: ${totalPrix} FCFA</b></td>
+                <td><span style="background:${badgeBg}; color:${textColor}; padding:4px 8px; border-radius:12px; font-size:12px;">${data.status || 'En attente'}</span></td>
+                <td style="display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center;">
+                    <button class="rdv-action-btn confirm-btn" style="background:#2ecc71; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="changerStatutCommande('${data.id}', 'Validée')" title="Valider">Valider</button>
+                    <button class="rdv-action-btn confirm-btn" style="background:#3498db; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="changerStatutCommande('${data.id}', 'Livrée')" title="Livrer">Livrée</button>
+                </td>
+            `;
+            commandesTableBody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error("Erreur Commandes:", error);
+        commandesTableBody.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'>Erreur de chargement.</td></tr>`;
+    }
+}
+
+window.changerStatutCommande = async function(id, nouveauStatut) {
+    if (confirm(`Voulez-vous passer cette commande au statut : ${nouveauStatut} ?`)) {
+        try {
+            await updateDoc(doc(db, "commandes", id), { status: nouveauStatut });
+            chargerCommandes();
         } catch (error) {
             console.error("Erreur:", error);
             alert("Erreur lors du changement de statut.");

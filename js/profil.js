@@ -78,6 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // 2. On lance la récupération de l'historique des rendez-vous
                 chargerMesRendezVous(user.uid);
 
+                // 3. On lance la récupération de l'historique des achats
+                chargerHistoriqueAchats(user.uid);
+
             } catch (error) {
                 console.error("Erreur lors de la récupération des infos:", error);
             }
@@ -295,6 +298,77 @@ document.addEventListener("DOMContentLoaded", () => {
         closeViewDossier.addEventListener("click", () => {
             viewDossierModal.style.display = "none";
         });
+    }
+
+    // -----------------------------------------------------------------
+    // HISTORIQUE DES ACHATS
+    // -----------------------------------------------------------------
+    async function chargerHistoriqueAchats(uid) {
+        const achatsList = document.getElementById("achats-list-container");
+        if (!achatsList) return;
+
+        achatsList.innerHTML = `<p style="text-align:center; color:#777;"><i class='bx bx-loader-alt bx-spin'></i> Chargement des achats...</p>`;
+        
+        try {
+            const q = query(collection(db, "commandes"), where("userId", "==", uid));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                achatsList.innerHTML = `<p style="text-align:center; color:#777; padding: 20px 0;">Vous n'avez pas encore effectué d'achats liés à ce compte.</p>`;
+                return;
+            }
+
+            const achats = [];
+            querySnapshot.forEach((docSnap) => {
+                achats.push(docSnap.data());
+            });
+
+            // Tri chronologique : du plus récent au plus ancien
+            achats.sort((a, b) => {
+                const dateA = a.date ? a.date.toDate() : new Date(0);
+                const dateB = b.date ? b.date.toDate() : new Date(0);
+                return dateB - dateA;
+            });
+
+            achatsList.innerHTML = "";
+            
+            achats.forEach(achat => {
+                const dateObj = achat.date ? achat.date.toDate() : new Date();
+                const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                
+                let statutClass = "status-attente";
+                if (achat.status === "Validée") statutClass = "status-confirme";
+                if (achat.status === "Livrée") statutClass = "status-termine";
+
+                let articlesHtml = '<ul style="list-style:none; padding:0; margin:10px 0 0 0; font-size:13px; color:#555;">';
+                if (achat.articles && achat.articles.length > 0) {
+                    achat.articles.forEach(art => {
+                        articlesHtml += `<li style="margin-bottom:5px;">• <b>${art.nom}</b> (${art.marque}) - ${art.prix} FCFA</li>`;
+                    });
+                }
+                articlesHtml += '</ul>';
+
+                const totalPrix = achat.articles ? achat.articles.reduce((sum, item) => sum + parseInt(item.prix.toString().replace(/\\s+/g, '') || 0), 0) : 0;
+
+                const cardHtml = \`
+                    <div class="rdv-card" style="border-left: 4px solid #3498db; margin-bottom:15px; background-color: #f8f9fa;">
+                        <div class="rdv-card-info" style="width: 100%;">
+                            <h4 style="color:#183153; margin-bottom: 8px;"><i class='bx bx-shopping-bag'></i> Commande du \${dateFormatee}</h4>
+                            <span class="rdv-status \${statutClass}" style="margin-bottom:10px; display:inline-block;">\${achat.status || 'En attente'}</span>
+                            \${articlesHtml}
+                            <p style="text-align:right; font-weight:bold; color:#183153; margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
+                                Total : \${totalPrix} FCFA
+                            </p>
+                        </div>
+                    </div>
+                \`;
+                achatsList.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+        } catch (error) {
+            console.error("Erreur chargement achats :", error);
+            achatsList.innerHTML = \`<p style="text-align:center; color:#e74c3c; font-size:14px; padding: 10px;">Impossible de charger l'historique des achats.</p>\`;
+        }
     }
     // -----------------------------------------------------------------
     // GESTION IMPRESSION ORDONNANCE (PATIENT)
